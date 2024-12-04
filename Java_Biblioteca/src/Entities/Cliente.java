@@ -3,18 +3,22 @@ package Entities;
 import java.util.*;
 
 public class Cliente {
+    // Atributo identificador;
 	private String cpf;
 	private String nome;
+    // Lista de itens do tipo Venda, responsável pela listagem de vendas feitas pelo Cliente;
 	private List<Venda> listaDeVendas;
 	
 	Cliente(String cpf, String nome) {
 		this.cpf = cpf;
 		this.nome = nome;
-		this.listaDeVendas = new ArrayList<>(); // Inicializamos lista vazia de itens
+        // Inicializamos lista VAZIA de itens;
+		this.listaDeVendas = new ArrayList<>(); 
 	}
 	
 	public void adicionarVenda(Venda venda) {	
-		this.listaDeVendas.add(venda);  		// Adiciona a venda à lista
+        // Adiciona a venda à lista;
+		this.listaDeVendas.add(venda);
 	}
 	
     // Getters e Setters
@@ -22,9 +26,11 @@ public class Cliente {
         return cpf;
     }
 
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
+
+    // Não vista a necessidade de fazer alteração de CPF a princípio, setter desabilitado.
+    // public void setCpf(String cpf) {
+    //     this.cpf = cpf;
+    // }
 
     public String getNome() {
         return nome;
@@ -38,8 +44,9 @@ public class Cliente {
         return listaDeVendas;
     }
 
-    public void setListaDeVendas(List<Venda> listaDeVendas) {
-        this.listaDeVendas = listaDeVendas;
-    }
+    // Não vista a necessidade de alterar listagem de vendas a princípio, setter desabilitado.
+    // public void setListaDeVendas(List<Venda> listaDeVendas) {
+    //     this.listaDeVendas = listaDeVendas;
+    // }
     
 }

@@ -4,50 +4,51 @@ package Entities;
 
 public class ItemVenda {
 	private int id;
-	private Livro livro;
+	// Atributo do tipo Livro;
+    private Livro livro;
 	private int quantidade;
-    private double precoTotal;       // Preço total do item (livro x quantidade)
+    // Preço total do item, Livro * Quantidade;
+    private double precoTotal;
 
-	
 	ItemVenda(int id, Livro livro, int quantidade) {
 		this.id = id;
 		this.livro = livro;
 		this.quantidade = quantidade;
+        // Não é necessário construir "precoTotal", já que o mesmo é um atributo composto por um calculo.
 	}
 	
-	public Double calcularPrecoTotal() {
-		return livro.getPreco() * quantidade;
-	}
-	
-    // Getters e Setters
+// Getters
     public int getId() {
         return id;
     }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Livro getLivro() {
-        return livro;
-    }
-
-    public void setLivro(Livro livro) {
-        this.livro = livro;
-        this.precoTotal = calcularPrecoTotal(); // Recalcula o preço total ao alterar o livro
-    }
-
     public int getQuantidade() {
         return quantidade;
     }
+    public Livro getLivro() {
+        return livro;
+    }
+    public double getPrecoTotal() {
+    	return precoTotal;
+    }
 
+// Setters
+    // public void setId(int id) {
+    //     this.id = id;
+    // }
+
+    // Faz recalculo do preço total ao alterar o livro. 
+    public void setLivro(Livro livro) {
+        this.livro = livro;
+        this.precoTotal = calcularPrecoTotal(); 
+    }
+    // Alterar quantidade de livros e recalcular o valor total. 
     public void setQuantidade(int quantidade) {
     	this.quantidade = quantidade;
     	this.precoTotal = calcularPrecoTotal();
     }
+    // Utiliza getter de "Preco", multiplicado pela quantidade.
+    public Double calcularPrecoTotal() {
+		return livro.getPreco() * quantidade;
+	}
     
-    public double getPrecoTotal() {
-    	return precoTotal;
-    }
-	
 }

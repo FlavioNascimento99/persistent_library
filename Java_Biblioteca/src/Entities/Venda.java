@@ -13,57 +13,56 @@ public class Venda {
 		this.id = id;
 		this.cliente = cliente;
 		this.data = data;
+        this.valorTotal = 0.0;
+
 		this.itens = new ArrayList<>();
-		this.valorTotal = 0.0;
 	}
 	
+    // Método responsável por mapeamento de valores de ItemVenda (utilizando metodo acessor)
 	public void calcularValorTotal() {
 		this.valorTotal = itens.stream()
 							   .mapToDouble(item -> item.getPrecoTotal())
-							   .sum();
-							
+							   .sum();					
 	}
-	
 	public void adicionarItem(ItemVenda item) {
 		this.itens.add(item);
 		calcularValorTotal(); 
 	}
 	
-	// Getters e Setters
+	// Getters
     public int getId() {
         return id;
+    }
+    public Cliente getCliente() {
+        return cliente;
+    }
+    public List<ItemVenda> getItens() {
+        return itens;
+    }
+    public Date getData() {
+        return data;
+    }
+    public double getValorTotal() {
+        return valorTotal;
+    }
+
+
+    // Setters
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
     public void setId(int id) {
         this.id = id;
     }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
-
-    public Date getData() {
-        return data;
-    }
-
     public void setData(Date data) {
         this.data = data;
     }
-
-    public List<ItemVenda> getItens() {
-        return itens;
-    }
-
     public void setItens(List<ItemVenda> itens) {
         this.itens = itens;
-        calcularValorTotal();     // Recalcula o valor total ao alterar a lista
+        
+        // Recalcula o valor total ao alterar a lista
+        calcularValorTotal(); 
     }
-
-    public double getValorTotal() {
-        return valorTotal;
-    }
+    
 }

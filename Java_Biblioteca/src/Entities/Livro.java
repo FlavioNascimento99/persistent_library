@@ -13,35 +13,34 @@ public class Livro {
 		this.preco = preco;
 	}
 	
-    // Getters e Setters
+// Getters
     public int getId() {
         return id;
     }
-
-    public void setId(int id) {
-        this.id = id;
+    public String getAutor() {
+        return autor;
     }
-
+    public double getPreco() {
+        return preco;
+    }
     public String getTitulo() {
         return titulo;
     }
 
+// Setters
+    // public void setId(int id) {
+    //     this.id = id;
+    // }
+
+    // Alteração de atributo
     public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
-
-    public String getAutor() {
-        return autor;
-    }
-
+    // Alteração de atributo
     public void setAutor(String autor) {
         this.autor = autor;
     }
-
-    public double getPreco() {
-        return preco;
-    }
-    
+    // Alteração de atributo - condicional que evita atribuição negativa.
     public void setPreco(double preco) {
         if (preco < 0) {
             throw new IllegalArgumentException("O preço não pode ser negativo.");
