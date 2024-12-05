@@ -1,7 +1,11 @@
 package DAO;
 
-import com.db4o.*;
+import java.util.List;
 
+import com.db4o.*;
+import com.db4o.query.Query;
+
+import Entities.Cliente;
 import Entities.Venda;
 
 public class VendaDAO {
