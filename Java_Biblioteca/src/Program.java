@@ -230,7 +230,7 @@ public class Program {
         System.out.println("Venda registrada no sistema!\n");
     }
     
- // Realizar exclusão
+    // Realizar exclusão
     public static void realizarExclusao(Scanner scanner) {
         System.out.println("\n--- Realizar Venda ---");
 
@@ -277,6 +277,17 @@ public class Program {
         } else {
         	System.out.println("Operação cancelada.");
     	}
+        
     }
 
+    public static void listagemPromocional() {
+        System.out.println("\n--- Livros em promoção (Abaixo de R$20,00 ---");
+
+        Livro livro;
+        // Listar clientes
+        LivroDAO livroDAO= new LivroDAO(Util.openDatabase());
+        List<Livro> livros = LivroDAO.livrosPromocao(livro);
+
+    }
+    
 }

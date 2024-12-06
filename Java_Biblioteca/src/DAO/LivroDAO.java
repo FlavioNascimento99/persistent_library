@@ -35,4 +35,16 @@ public class LivroDAO {
              .constrain(titulo);           // Filtra a consulta para encontrar livros com o título correspondente ao parâmetro passado.
         return query.execute();            // Executa a consulta e retorna os livros encontrados que atendem ao critério de título.
     }
+
+//    public List<Livro> livrosPromocao(Livro livro) {
+// 	
+//    	Double valorPromocional = 20.00;
+//    	Query query = database.query();
+//    	List<Livro> listagem = query.constrain(Livro.class);
+//    	query.descend("preco").constrain();
+//    	List<Livro> listagemPromocional = query.execute();
+//    	if 
+//    	return listagemPromocional.isEmpty() ? null : listagemPromocional;
+//    	
+//    }
 }

@@ -36,7 +36,12 @@ public class ClienteDAO {
         return query.execute();
     }
 
-    public void deletar(Cliente cliente) {
-        database.delete(cliente);
+    public void deletar(Cliente clienteADeletar) {
+        Query query = database.query();
+        query.constrain(Cliente.class);
+        query.descend("cpf").constrain(clienteADeletar);
+        
+        database.delete(clienteADeletar);
+        query.execute();
     }
 }
