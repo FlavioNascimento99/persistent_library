@@ -268,7 +268,7 @@ public class Program {
         Cliente clienteSelecionado = clientes.get(opcao -1);
     
         // Confirmar exclusão
-        System.out.print("Tem certeza de qe deseja excluir o cliente " + clienteSelecionado.getNome() + ", CPF: " + clienteSelecionado.getCpf() + "s/n: ");
+        System.out.print("Tem certeza de qe deseja excluir o cliente " + clienteSelecionado.getNome() + ", CPF: " + clienteSelecionado.getCpf() + "(s/n): ");
         String confirmacao = scanner.nextLine();
         
         if (confirmacao.equalsIgnoreCase("s")) {
