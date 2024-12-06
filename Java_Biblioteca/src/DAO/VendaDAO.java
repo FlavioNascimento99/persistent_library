@@ -3,7 +3,7 @@ package DAO;
 import java.util.List;
 
 import com.db4o.*;
-import com.db4o.query.Query;
+import com.db4o.query.*;
 
 import Entities.Cliente;
 import Entities.Venda;

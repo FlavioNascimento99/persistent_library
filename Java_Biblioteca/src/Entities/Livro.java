@@ -6,8 +6,7 @@ public class Livro {
 	private String autor;
 	private Double preco;
 	
-	Livro(int id, String titulo, String autor, Double preco){
-		this.id = id;
+	public Livro(String titulo, String autor, Double preco){
 		this.titulo = titulo;
 		this.autor = autor;
 		this.preco = preco;

@@ -9,11 +9,15 @@ public class Cliente {
     // Lista de itens do tipo Venda, responsável pela listagem de vendas feitas pelo Cliente;
 	private List<Venda> listaDeVendas;
 	
-	Cliente(String cpf, String nome) {
+	public Cliente(String cpf, String nome) {
 		this.cpf = cpf;
 		this.nome = nome;
         // Inicializamos lista VAZIA de itens;
 		this.listaDeVendas = new ArrayList<>(); 
+	}
+	
+	public Cliente() {
+		
 	}
 	
 	public void adicionarVenda(Venda venda) {	

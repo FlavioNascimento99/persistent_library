@@ -10,8 +10,7 @@ public class ItemVenda {
     // Preço total do item, Livro * Quantidade;
     private double precoTotal;
 
-	ItemVenda(int id, Livro livro, int quantidade) {
-		this.id = id;
+	public ItemVenda(Livro livro, int quantidade) {
 		this.livro = livro;
 		this.quantidade = quantidade;
         // Não é necessário construir "precoTotal", já que o mesmo é um atributo composto por um calculo.
