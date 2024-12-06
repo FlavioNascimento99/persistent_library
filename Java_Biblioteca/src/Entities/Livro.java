@@ -46,4 +46,13 @@ public class Livro {
         }
         this.preco = preco;
     }
+    
+    @Override
+    public String toString() {
+    	return "Nome:  " + titulo + "\n" +
+    		   "Autor: " + autor +  "\n" + 
+    		   "Preço: " + preco +  "\n" +
+    		   "\n" +
+    		   "\n";
+    }
 }

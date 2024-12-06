@@ -18,17 +18,25 @@ public class Program {
 		Locale.setDefault(Locale.US);
         boolean running = true;
 
+//        ** Sistema de Livraria **
+//        Funções padrão de CRUD, aplicando conceitos de persistência de dados dentro do DB4o,
+//        Banco de Dados embarcado e orientado à objetos.
+        
+//        To-Do: toString para Entidades, formatar saída de dados do Objeto. 
+        
+        
         while (running) {
             System.out.println("=====================================");
-            System.out.println("        Sistema de Livraria          ");
+            System.out.println("||      Sistema de Livraria        ||");
             System.out.println("=====================================");
-            System.out.println("1. Cadastrar Livro");
-            System.out.println("2. Listar Livros");
-            System.out.println("3. Buscar Livro por Título");
-            System.out.println("4. Cadastrar Cliente");
-            System.out.println("5. Listar Clientes");
-            System.out.println("6. Realizar Venda");
-            System.out.println("7. Sair");
+            System.out.println("1. Livro - Cadastro");
+            System.out.println("2. Livro - Listagem");
+            System.out.println("3. Livro - Busca por Título");
+            System.out.println("4. Cliente - Cadastro");
+            System.out.println("5. Cliente - Listagem");
+            System.out.println("6. Cliente - Exclusão");
+            System.out.println("7. Realizar Venda!");
+            System.out.println("8. Sair");
             System.out.print("Escolha uma opção: ");
 
             int opcao = scanner.nextInt();
@@ -51,9 +59,12 @@ public class Program {
                     listarClientes();
                     break;
                 case 6:
+                	realizarExclusao(scanner);
+                	break;
+                case 7:
                     realizarVenda(scanner);
                     break;
-                case 7:
+                case 8:
                     System.out.println("Saindo do sistema...");
                     running = false;
                     break;
@@ -65,7 +76,8 @@ public class Program {
         scanner.close();
         Util.closeDatabase(); // Garantir fechamento do banco de dados
     }
-
+    
+    // Método privado de Cadastro de Livros
     private static void cadastrarLivro(Scanner scanner) {
         System.out.println("\n--- Cadastro de Livro ---");
         System.out.print("Título: ");
@@ -75,53 +87,72 @@ public class Program {
         System.out.print("Preço: ");
         double preco = scanner.nextDouble();
 
+        // Instanciação da Entidade e do Data Access de Livro, esse segundo com objetivo de abrir a conexão com Banco.
         Livro livro = new Livro(titulo, autor, preco);
         LivroDAO livroDAO = new LivroDAO(Util.openDatabase());
+        
+        // Uso da regra de negócio "salvar" no Data Access, para salvar objeto Livro instanciado.
         livroDAO.salvar(livro);
 
         System.out.println("Livro cadastrado com sucesso!\n");
     }
 
+    // Método privado de listagem de Livros
     private static void listarLivros() {
         System.out.println("\n--- Lista de Livros ---");
+        
+        // Instanciação do Data Access de Livro, novamente fazendo abertura do Banco para consulta.
         LivroDAO livroDAO = new LivroDAO(Util.openDatabase());
+        
+        // Laço de leitura de dados dentro
         for (Livro livro : livroDAO.listarTodos()) {
-            System.out.println(livro.getTitulo());
+            System.out.println(livro);
         }
         System.out.println();
     }
-
+    
+    // Método privado de busca baseado no título do Objeto.
     private static void buscarLivroPorTitulo(Scanner scanner) {
         System.out.println("\n--- Buscar Livro por Título ---");
         System.out.print("Título: ");
+        
         String titulo = scanner.nextLine();
-
+        
+        // Instanciação do DataAccess chamando método de conexão com Banco de Dados
         LivroDAO livroDAO = new LivroDAO(Util.openDatabase());
+        
         for (Livro livro : livroDAO.buscaPorTitulo(titulo)) {
-            System.out.println(livro.getTitulo());
+            System.out.println(livro);
         }
+        
         System.out.println();
+    
     }
 
     private static void cadastrarCliente(Scanner scanner) {
         System.out.println("\n--- Cadastro de Cliente ---");
         System.out.print("Nome: ");
+       
         String nome = scanner.nextLine();
+        
         System.out.print("CPF: ");
+        
         String cpf = scanner.nextLine();
 
         Cliente cliente = new Cliente(nome, cpf);
         ClienteDAO clienteDAO = new ClienteDAO(Util.openDatabase());
+        
         clienteDAO.salvar(cliente);
 
         System.out.println("Cliente cadastrado com sucesso!\n");
+    
     }
 
     private static void listarClientes() {
         System.out.println("\n--- Lista de Clientes ---");
         ClienteDAO clienteDAO = new ClienteDAO(Util.openDatabase());
         for (Cliente cliente : clienteDAO.listarTodos()) {
-            System.out.println(cliente.getNome());
+            System.out.println(cliente);
         }
         System.out.println();
     }
@@ -132,6 +163,8 @@ public class Program {
         // Listar clientes
         ClienteDAO clienteDAO = new ClienteDAO(Util.openDatabase());
         List<Cliente> clientes = clienteDAO.listarTodos();
+        
+        // Verificar listagem, caso vazia, retorna mensagem a seguir.
         if (clientes.isEmpty()) {
             System.out.println("Não há clientes cadastrados para realizar a venda.");
             return;
@@ -182,6 +215,8 @@ public class Program {
                 adicionarOutro = false;
             }
         }
+        
+        
 
         // Criar a venda
         Venda venda = new Venda(itensVenda, clienteSelecionado);
@@ -193,6 +228,55 @@ public class Program {
         VendaDAO vendaDAO = new VendaDAO(Util.openDatabase());
         vendaDAO.salvar(venda);
         System.out.println("Venda registrada no sistema!\n");
+    }
+    
+ // Realizar exclusão
+    public static void realizarExclusao(Scanner scanner) {
+        System.out.println("\n--- Realizar Venda ---");
+
+        // Listar clientes
+        ClienteDAO clienteDAO = new ClienteDAO(Util.openDatabase());
+        List<Cliente> clientes = clienteDAO.listarTodos();
+
+        
+        if (clientes.isEmpty()) {
+            System.out.println("Não há clientes cadastrados para realizar a venda.");
+            return;
+        }
+        
+        for( int i=0;i < clientes.size(); i++) {
+        	System.out.println((i + 1) +". " + clientes.get(i).getNome() + " CPF: " + clientes.get(i).getCpf());
+        }
+        
+        // Captura a seleção do usuário
+        System.out.println("Selecione o cliente que deseja excluir: ");
+        int opcao;
+        try {
+        	opcao = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException  e) {
+        	System.out.println("Opção inválida. Tente novamente.");
+        	return;
+        }
+        
+        // Validação
+        if (opcao < 1 || opcao > clientes.size()) {
+        	System.out.println("Opção fora de intervalo, tente novamente.");
+        	return;
+        }
+        
+        // Captura de cliente subtraindo valor por 1 por conta da indexação da lista
+        Cliente clienteSelecionado = clientes.get(opcao -1);
+    
+        // Confirmar exclusão
+        System.out.print("Tem certeza de qe deseja excluir o cliente " + clienteSelecionado.getNome() + ", CPF: " + clienteSelecionado.getCpf() + "s/n: ");
+        String confirmacao = scanner.nextLine();
+        
+        if (confirmacao.equalsIgnoreCase("s")) {
+        	clienteDAO.deletar(clienteSelecionado);
+        	System.out.println("Cliente excluído com sucesso.");
+        } else {
+        	System.out.println("Operação cancelada.");
+    	}
     }
 
 }

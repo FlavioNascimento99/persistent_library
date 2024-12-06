@@ -53,4 +53,13 @@ public class Cliente {
     //     this.listaDeVendas = listaDeVendas;
     // }
     
+    
+    @Override
+    public String toString() {
+    	return "Nome: " + nome + "\n" + 
+    		   "CPF:  " + cpf  + "\n" + 
+    		   "Vendas: " + listaDeVendas +
+    		   "\n" +
+    		   "\n";
+    }
 }
