@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/23f378fd-cbb4-4158-9608-85cab177983b)# Documentação
+# Documentação
 Flavio Nascimento
 Novembro de 2024
 
