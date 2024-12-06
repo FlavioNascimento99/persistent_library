@@ -1,4 +1,4 @@
-# Documentação
+![image](https://github.com/user-attachments/assets/23f378fd-cbb4-4158-9608-85cab177983b)# Documentação
 Flavio Nascimento
 Novembro de 2024
 
@@ -17,3 +17,9 @@ As entidades presentes dentro do sistema são:
   - ItemVenda
 
 Livro por si só é uma Entidade independente, diferente de Cliente que faz uma Venda que contém ItemVenda que é composto por uma lista de Livro.
+
+### Consutas base
+Na versão base do sistema, existem algumas consultas superficiais, como listagem de livros, clientes e vendas.
+  - Quais os clientes que gastaram mais de N?
+  - Quais livros foram vendidos na data X?
+  - Quais os livros com mais de N vendas?
