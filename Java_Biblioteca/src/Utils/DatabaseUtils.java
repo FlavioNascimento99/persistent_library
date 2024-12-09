@@ -8,7 +8,7 @@ import Entities.Cliente;
 import Entities.ItemVenda;
 import Entities.Venda;
 
-public class Util {
+public class DatabaseUtils {
     // Criamos atributo do tipo ObjectContainer.
     private static ObjectContainer database;
 

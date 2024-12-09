@@ -11,14 +11,14 @@ import Entities.Cliente;
 import Entities.ItemVenda;
 import Entities.Livro;
 import Entities.Venda;
-import Utils.Util;
+import Utils.DatabaseUtils;
 
 public class VendaService {
 	
     private static void realizarVenda(Scanner scanner) {
         System.out.println("\n--- Realizar Venda ---");
 
-        ClienteDAO clienteDAO = new ClienteDAO(Util.openDatabase());
+        ClienteDAO clienteDAO = new ClienteDAO(DatabaseUtils.openDatabase());
         List<Cliente> clientes = clienteDAO.listarTodos();
         
         if (clientes.isEmpty()) {
@@ -35,7 +35,7 @@ public class VendaService {
         scanner.nextLine();
         
         Cliente clienteSelecionado = clientes.get(clienteIndex);
-        LivroDAO livroDAO = new LivroDAO(Util.openDatabase());
+        LivroDAO livroDAO = new LivroDAO(DatabaseUtils.openDatabase());
         List<Livro> livros = livroDAO.listarTodos();
         if (livros.isEmpty()) {
             System.out.println("Não há livros cadastrados para realizar a venda.");
@@ -75,7 +75,7 @@ public class VendaService {
         System.out.println("Cliente: " + clienteSelecionado.getNome());
         System.out.println("Total da venda: R$" + venda.getValorTotal());
 
-        VendaDAO vendaDAO = new VendaDAO(Util.openDatabase());
+        VendaDAO vendaDAO = new VendaDAO(DatabaseUtils.openDatabase());
         vendaDAO.salvar(venda);
         System.out.println("Venda registrada no sistema!\n");
     }

@@ -6,7 +6,9 @@ import java.util.Scanner;
 import Services.ClienteService;
 import Services.LivroService;
 import Services.VendaService;
-import Utils.Util;
+
+import Utils.DatabaseUtils;
+import Utils.InputUtils;
 
 public class InputOutputInterface {
 	private ClienteService clienteService;
@@ -26,17 +28,24 @@ public class InputOutputInterface {
 	        System.out.println("=====================================");
 	        System.out.println("||      Sistema de Livraria        ||");
 	        System.out.println("=====================================");
-	        System.out.println("1. Livro - Cadastro");
-	        System.out.println("2. Livro - Listagem");
-	        System.out.print("3. Livro - Busca por Título");
-	        System.out.println(" Clientes");
+	        
+	        System.out.println("==== Livros ====");
+	        System.out.println("1. Cadastro");
+	        System.out.println("2. Listagem");
+	        System.out.println("3. Busca");
+	        
+	        System.out.println("==== Clientes ====");
 	        System.out.println("4. Cadastro");
 	        System.out.println("5. Listagem");
-	        System.out.print("6. Exclusão");
-	        System.out.println(" Vendas");
-	        System.out.print("7. Realizar Venda!");
+	        System.out.println("6. Exclusão");
+	        
+	        System.out.println("==== Vendas ====");
+	        System.out.println("7. Realizar Venda!");
+	        
 	        System.out.println("-------------------");
+	        
 	        System.out.println("8. Fechar");
+	        
 	        System.out.println("Escolha uma opção: ");
 	
 	        int opcao = scanner.nextInt();
@@ -44,7 +53,7 @@ public class InputOutputInterface {
 	
 	        switch (opcao) {
 	            case 1:
-	                cadastrarLivro(scanner);
+	            	livroService.cadastrarLivro();
 	                break;
 	            case 2:
 	                listarLivros();

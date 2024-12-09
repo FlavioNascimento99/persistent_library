@@ -8,11 +8,13 @@ public class Venda {
 	private double valorTotal;
 	private List<ItemVenda> itens;
 	
+	// Constructor
 	public Venda(List<ItemVenda> itens, Cliente cliente) {
 		this.cliente = cliente;
 		this.itens = new ArrayList<>();
 	}
 	
+	// Add Items
 	public void adicionarItem(ItemVenda item) {
 		this.itens.add(item);
 		calcularValorTotal(); 
@@ -22,21 +24,20 @@ public class Venda {
     public int getId() {
         return id;
     }
+    
+    // Get Cliente
     public Cliente getCliente() {
         return cliente;
     }
+    
+    // Get Items<List>
     public List<ItemVenda> getItens() {
         return itens;
     }
+    
+    // Get Total Selling Value
     public double getValorTotal() {
         return valorTotal;
-    }
-
-    // Método responsável por mapeamento de valores de ItemVenda (utilizando metodo acessor)
-    public void calcularValorTotal() {
-    	this.valorTotal = itens.stream()
-    			.mapToDouble(item -> item.calcularPrecoTotal())
-    			.sum();					
     }
 
     // Setters
@@ -52,6 +53,13 @@ public class Venda {
         
         // Recalcula o valor total ao alterar a lista
         calcularValorTotal(); 
+    }
+    
+    // Método responsável por mapeamento de valores de ItemVenda (utilizando metodo acessor)
+    public void calcularValorTotal() {
+    	this.valorTotal = itens.stream()
+    			.mapToDouble(item -> item.calcularPrecoTotal())
+    			.sum();					
     }
     
 }

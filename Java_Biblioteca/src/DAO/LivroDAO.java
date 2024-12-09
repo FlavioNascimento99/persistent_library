@@ -12,7 +12,8 @@ public class LivroDAO {
 
     // Construtor do DAO - Recebe a conexão com o banco de dados (ObjectContainer)
     public LivroDAO(ObjectContainer database) {
-        this.database = database;          // Injeta o Banco de Dados (ObjectContainer) no DAO de Livro.
+    	// Injeta o Banco de Dados (ObjectContainer) no DAO de Livro.
+        this.database = database;          
     }
 
     // Método para salvar um objeto Livro no banco de dados

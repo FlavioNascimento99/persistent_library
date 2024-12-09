@@ -10,7 +10,7 @@ import Entities.Cliente;
 import Entities.ItemVenda;
 import Entities.Livro;
 import Entities.Venda;
-import Utils.Util;
+import Utils.DatabaseUtils;
 
 public class Program {
     public static void main(String[] args) {

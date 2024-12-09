@@ -4,7 +4,8 @@ import java.util.Scanner;
 
 import DAO.LivroDAO;
 import Entities.Livro;
-import Utils.Util;
+import Utils.DatabaseUtils;
+import Utils.InputUtils;
 
 public class LivroService {
 	
@@ -12,7 +13,7 @@ public class LivroService {
     private static void listarLivros() {
         System.out.println("\n--- Lista de Livros ---");
         // Instanciação do Data Access de Livro, novamente fazendo abertura do Banco para consulta.
-        LivroDAO livroDAO = new LivroDAO(Util.openDatabase());
+        LivroDAO livroDAO = new LivroDAO(DatabaseUtils.openDatabase());
         // Laço de leitura de dados dentro
         for (Livro livro : livroDAO.listarTodos()) {
             System.out.println(livro);
@@ -21,19 +22,20 @@ public class LivroService {
     }
 	
 	// Cadastro de Livros
-    private static void cadastrarLivro(Scanner scanner) {
+    private static void cadastrarLivro(InputUtils inputUtils, LivroDAO livroDAO) {
         System.out.println("\n--- Cadastro de Livro ---");
-        System.out.print("Título: ");
-        String titulo = scanner.nextLine();
-        System.out.print("Autor: ");
-        String autor = scanner.nextLine();
-        System.out.print("Preço: ");
-        double preco = scanner.nextDouble();
-        // Instanciação da Entidade e do Data Access de Livro, esse segundo com objetivo de abrir a conexão com Banco.
-        Livro livro = new Livro(titulo, autor, preco);
-        LivroDAO livroDAO = new LivroDAO(Util.openDatabase());
-        // Uso da regra de negócio "salvar" no Data Access, para salvar objeto Livro instanciado.
+        
+        String titulo = inputUtils.stringInput("Titulo: ");
+        String autor = inputUtils.stringInput("Autor: ");
+        Double valor = inputUtils.doubleInput("Valor do Produto: ");
+        
+        // Objeto criado.
+        Livro livro = new Livro(titulo, autor, valor);
+        
+        // DataAccess de Livro salva Objeto Livro instanciado.
         livroDAO.salvar(livro);
+        
+        // User feedback CLI
         System.out.println("Livro cadastrado com sucesso!\n");
     }
 
@@ -43,7 +45,7 @@ public class LivroService {
         System.out.print("Título: ");
         String titulo = scanner.nextLine();
         // Instanciação do DataAccess chamando método de conexão com Banco de Dados
-        LivroDAO livroDAO = new LivroDAO(Util.openDatabase());   
+        LivroDAO livroDAO = new LivroDAO(DatabaseUtils.openDatabase());   
         for (Livro livro : livroDAO.buscaPorTitulo(titulo)) {
             System.out.println(livro);
         }

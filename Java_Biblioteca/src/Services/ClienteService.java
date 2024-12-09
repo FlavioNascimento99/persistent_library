@@ -5,13 +5,13 @@ import java.util.Scanner;
 
 import DAO.ClienteDAO;
 import Entities.Cliente;
-import Utils.Util;
+import Utils.DatabaseUtils;
 
 public class ClienteService {
 
 	private static void listarClientes() {
 		System.out.println("\n--- Lista de Clientes ---");
-		ClienteDAO clienteDAO = new ClienteDAO(Util.openDatabase());
+		ClienteDAO clienteDAO = new ClienteDAO(DatabaseUtils.openDatabase());
 		for (Cliente cliente : clienteDAO.listarTodos()) {
 			System.out.println(cliente);
 		}
@@ -25,7 +25,7 @@ public class ClienteService {
         System.out.print("CPF: ");
         String cpf = scanner.nextLine();
         Cliente cliente = new Cliente(nome, cpf);
-        ClienteDAO clienteDAO = new ClienteDAO(Util.openDatabase());
+        ClienteDAO clienteDAO = new ClienteDAO(DatabaseUtils.openDatabase());
         clienteDAO.salvar(cliente);
         System.out.println("Cliente cadastrado com sucesso!\n");
     }
@@ -33,7 +33,7 @@ public class ClienteService {
 	public static void deletarCliente(Scanner scanner) {
         System.out.println("\n--- Realizar Exclusão - Clientes ---");
         
-        ClienteDAO clienteDAO = new ClienteDAO(Util.openDatabase());
+        ClienteDAO clienteDAO = new ClienteDAO(DatabaseUtils.openDatabase());
         List<Cliente> clientes = clienteDAO.listarTodos();
         
         if (clientes.isEmpty()) {

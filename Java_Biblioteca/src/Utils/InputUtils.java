@@ -9,9 +9,8 @@ public class InputUtils {
 		this.scanner = scanner;
 	}
 	
-	
+
 	public int integerInput(String message) {	// Input Inteiro
-		System.out.print(message);
 		while(true) {
 			try {
 				System.out.print(message);
@@ -23,10 +22,19 @@ public class InputUtils {
 		
 	}
 	
-	public String stringInput(String message) {	// Input String
-		System.out.print(message);
-		return scanner.nextLine().trim();
+	
+	public String stringInput(String message) {
+		while(true) {
+			System.out.print(message);
+			String input = scanner.nextLine().trim();
+			if (!input.isEmpty()) {
+				return input;
+			} else { 
+				System.out.println("Entrada invalida. Valor nao pode ser vazio");
+			}
+		}
 	}
+	
 	
 	public double doubleInput(String message) {
 		while(true) {
@@ -38,6 +46,7 @@ public class InputUtils {
 			}
 		}
 	}
+	
 	
 	public boolean booleanInput(String message) {
 		while(true) {
@@ -56,6 +65,12 @@ public class InputUtils {
 	public int confirmMenuSelection(String message, int min, int max) {
 		while(true) {
 			int menuSelected = integerInput(message);
+			if (menuSelected >= min || menuSelected <= max) {
+				return menuSelected;
+			} else {
+				System.out.println("Opcao selecionanda invalida");
+			}
 		}
 	}
+	
 }

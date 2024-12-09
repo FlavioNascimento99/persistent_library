@@ -6,8 +6,8 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="C:/Users/flavio.filho/Documents/db4o-8.1.249.16099-core-java5.jar"/>
-	<classpathentry kind="lib" path="C:/Users/flavio.filho/Documents/db4o-8.1.249.16099-cs.optional-java5.jar"/>
-	<classpathentry kind="lib" path="C:/Users/flavio.filho/Documents/db4o-8.1.249.16099-cs-java5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/flavi/Desktop/db4o-8.1.249.16099-core-java5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/flavi/Desktop/db4o-8.1.249.16099-cs.optional-java5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/flavi/Desktop/db4o-8.1.249.16099-cs-java5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
