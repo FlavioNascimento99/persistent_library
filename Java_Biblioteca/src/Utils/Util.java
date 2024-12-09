@@ -1,4 +1,4 @@
-package Util;
+package Utils;
 
 import com.db4o.ObjectContainer;
 import com.db4o.Db4oEmbedded;
