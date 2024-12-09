@@ -55,7 +55,7 @@ public class InputUtils {
 	
 	public int confirmMenuSelection(String message, int min, int max) {
 		while(true) {
-			int menuSelected = inputInteger(message);
+			int menuSelected = integerInput(message);
 		}
 	}
 }
