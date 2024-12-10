@@ -49,29 +49,29 @@ public class InputOutputInterface {
 	        System.out.println("Escolha uma opção: ");
 	
 	        int opcao = scanner.nextInt();
-	        scanner.nextLine(); // Consumir a quebra de linha do buffer
-	
+	        scanner.nextLine();
+	        
 	        switch (opcao) {
 	            case 1:
 	            	livroService.cadastrarLivro();
 	                break;
 	            case 2:
-	                listarLivros();
+	                livroService.listarLivros();
 	                break;
 	            case 3:
-	                buscarLivroPorTitulo(scanner);
+	                livroService.buscarLivroPorTitulo();
 	                break;
 	            case 4:
-	                cadastrarCliente(scanner);
+	                clienteService.cadastrarCliente();
 	                break;
 	            case 5:
-	                listarClientes();
+	                clienteService.listarClientes();
 	                break;
 	            case 6:
-	            	realizarExclusao(scanner);
+	            	clienteService.deletarCliente();
 	            	break;
 	            case 7:
-	                realizarVenda(scanner);
+	                realizarVenda(scanner); // To-do
 	                break;
 	            case 8:
 	                System.out.println("Saindo do sistema...");

@@ -5,64 +5,82 @@ import java.util.Scanner;
 
 import DAO.ClienteDAO;
 import Entities.Cliente;
+
+
 import Utils.DatabaseUtils;
+import Utils.InputUtils;
 
 public class ClienteService {
-
-	private static void listarClientes() {
+	private InputUtils inputUtils;
+	private ClienteDAO clienteDAO;
+	
+	public ClienteService(InputUtils inputUtils, ClienteDAO clienteDAO) {
+		this.inputUtils = inputUtils;
+		this.clienteDAO = clienteDAO;
+	}
+	
+	public void listarClientes() {
+		
 		System.out.println("\n--- Lista de Clientes ---");
+		
 		ClienteDAO clienteDAO = new ClienteDAO(DatabaseUtils.openDatabase());
+		
 		for (Cliente cliente : clienteDAO.listarTodos()) {
 			System.out.println(cliente);
 		}
 		System.out.println();
+		
 	}
 
-	private static void cadastrarCliente(Scanner scanner) {
+	public void cadastrarCliente() {
+		
         System.out.println("\n--- Cadastro de Cliente ---");
-        System.out.print("Nome: ");
-        String nome = scanner.nextLine();
-        System.out.print("CPF: ");
-        String cpf = scanner.nextLine();
+        
+        String nome = inputUtils.stringInput("Nome: ");
+        String cpf = inputUtils.stringInput("CPF: ");
+        
         Cliente cliente = new Cliente(nome, cpf);
-        ClienteDAO clienteDAO = new ClienteDAO(DatabaseUtils.openDatabase());
+        
         clienteDAO.salvar(cliente);
+        
         System.out.println("Cliente cadastrado com sucesso!\n");
+        
     }
 
-	public static void deletarCliente(Scanner scanner) {
-        System.out.println("\n--- Realizar Exclusão - Clientes ---");
+	public void deletarCliente() {
         
-        ClienteDAO clienteDAO = new ClienteDAO(DatabaseUtils.openDatabase());
-        List<Cliente> clientes = clienteDAO.listarTodos();
+		System.out.println("\n--- Realizar Exclusão - Clientes ---");
         
-        if (clientes.isEmpty()) {
+        clienteDAO = new ClienteDAO(DatabaseUtils.openDatabase());
+        
+        List<Cliente> clientesLista = clienteDAO.listarTodos();
+        
+        if (clientesLista.isEmpty()) {
             System.out.println("Não há clientes cadastrados.");
             return;
         }
         
-        for( int i=0;i < clientes.size(); i++) {
-        	System.out.println((i + 1) +". " + clientes.get(i).getNome() + " CPF: " + clientes.get(i).getCpf());
+        for( int i=0;i < clientesLista.size(); i++) {
+        	System.out.println((i + 1) +". " + clientesLista.get(i).getNome() + " CPF: " + clientesLista.get(i).getCpf());
         }
         
-        System.out.println("Selecione o cadastro que deseja excluir: ");
         int opcao;
         try {
-        	opcao = Integer.parseInt(scanner.nextLine());
+        	opcao = inputUtils.integerInput("Qual opcao deseja deletar: ");
         } catch (NumberFormatException  e) {
         	System.out.println("Opção inválida. Tente novamente.");
         	return;
         }
         
-        if (opcao < 1 || opcao > clientes.size()) {
+        if (opcao < 1 || opcao > clientesLista.size()) {
         	System.out.println("Opção fora de intervalo, tente novamente.");
         	return;
         }
         
-        Cliente clienteSelecionado = clientes.get(opcao -1);
+        Cliente clienteSelecionado = clientesLista.get(opcao -1);
         System.out.print("Tem certeza de qe deseja excluir o cliente " + clienteSelecionado.getNome() + ", CPF: " + clienteSelecionado.getCpf() + "(s/n): ");
         
-        String confirmacao = scanner.nextLine();
+        String confirmacao = inputUtils.stringInput("");
         if (confirmacao.equalsIgnoreCase("s")) {
         	clienteDAO.deletar(clienteSelecionado);
         	System.out.println("Cliente excluído com sucesso.");

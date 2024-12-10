@@ -10,12 +10,12 @@ public class InputUtils {
 	}
 	
 
-	public int integerInput(String message) {	// Input Inteiro
+	public int integerInput(String message) {	
 		while(true) {
 			try {
 				System.out.print(message);
-				return Integer.parseInt(scanner.nextLine()); // parseInt: converte entrada para um número inteiro;
-			} catch (NumberFormatException e) { // Solicita nova entrada em caso de erro.
+				return Integer.parseInt(scanner.nextLine());
+			} catch (NumberFormatException e) { 
 				System.out.print("Entrada inválida. Tente novamente: ");
 			}
 		}
