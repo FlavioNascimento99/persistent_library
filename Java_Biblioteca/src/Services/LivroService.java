@@ -1,6 +1,6 @@
 package Services;
 
-import java.util.Scanner;
+import java.util.List;
 
 import DAO.LivroDAO;
 import Entities.Livro;
@@ -12,8 +12,8 @@ public class LivroService {
 	private LivroDAO livroDAO;
 
     public LivroService(LivroDAO livroDAO, InputUtils inputUtils) {
-        this.livroDAO = livroDAO;
         this.inputUtils = inputUtils;
+        this.livroDAO = livroDAO;
     }
 	
     public void listarLivros() {
@@ -49,12 +49,16 @@ public class LivroService {
         
         String titulo = inputUtils.stringInput("Digite o nome do livro que deseja encontrar: ");
         
-        LivroDAO livroDAO = new LivroDAO(DatabaseUtils.openDatabase());   
+        LivroDAO livroDAO = new LivroDAO(DatabaseUtils.openDatabase()); 
         
-        for (Livro livro : livroDAO.buscaPorTitulo(titulo)) {
-            System.out.println(livro);
-        }
-        System.out.println();
-    
+        List<Livro> resultadoLivros = livroDAO.buscaPorTitulo(titulo);
+    	if(resultadoLivros.isEmpty()){ 
+    		System.out.println("Não foi encontrado nenhum titulo");
+    	} else {
+    		for (Livro livro : resultadoLivros) {
+    			System.out.println("Resultado da busca: " + livro);    			
+    		}
+    	}
+        
     }
 }

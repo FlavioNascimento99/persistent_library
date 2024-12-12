@@ -6,13 +6,11 @@ public class Cliente {
     // Atributo identificador;
 	private String cpf;
 	private String nome;
-    // Lista de itens do tipo Venda, responsável pela listagem de vendas feitas pelo Cliente;
 	private List<Venda> listaDeVendas;
 	
 	public Cliente(String cpf, String nome) {
 		this.cpf = cpf;
 		this.nome = nome;
-        // Inicializamos lista VAZIA de itens;
 		this.listaDeVendas = new ArrayList<>(); 
 	}
 	
@@ -21,20 +19,12 @@ public class Cliente {
 	}
 	
 	public void adicionarVenda(Venda venda) {	
-        // Adiciona a venda à lista;
 		this.listaDeVendas.add(venda);
 	}
 	
-    // Getters e Setters
     public String getCpf() {
         return cpf;
     }
-
-
-    // Não vista a necessidade de fazer alteração de CPF a princípio, setter desabilitado.
-    // public void setCpf(String cpf) {
-    //     this.cpf = cpf;
-    // }
 
     public String getNome() {
         return nome;
@@ -47,19 +37,10 @@ public class Cliente {
     public List<Venda> getListaDeVendas() {
         return listaDeVendas;
     }
-
-    // Não vista a necessidade de alterar listagem de vendas a princípio, setter desabilitado.
-    // public void setListaDeVendas(List<Venda> listaDeVendas) {
-    //     this.listaDeVendas = listaDeVendas;
-    // }
-    
     
     @Override
     public String toString() {
-    	return "CPF: (" + cpf + ") \n" + 
-    		   "Nome: " + nome  + "\n" + 
-    		   "Vendas: " + listaDeVendas +
-    		   "\n" +
-    		   "\n";
+        String vendasString = (listaDeVendas == null || listaDeVendas.isEmpty()) ? "Nenhuma venda registrada." : listaDeVendas.toString();
+        return String.format("Nome: %s, CPF: %s%nVendas: %s%n", nome, cpf, vendasString);
     }
 }

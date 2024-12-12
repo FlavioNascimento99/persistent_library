@@ -34,11 +34,6 @@ public class Venda {
     public List<ItemVenda> getItens() {
         return itens;
     }
-    
-    // Get Total Selling Value
-    public double getValorTotal() {
-        return valorTotal;
-    }
 
     // Setters
     public void setCliente(Cliente cliente) {
@@ -56,10 +51,12 @@ public class Venda {
     }
     
     // Método responsável por mapeamento de valores de ItemVenda (utilizando metodo acessor)
-    public void calcularValorTotal() {
-    	this.valorTotal = itens.stream()
+    public double calcularValorTotal() {
+    	return valorTotal = itens.stream()
     			.mapToDouble(item -> item.calcularPrecoTotal())
     			.sum();					
     }
+    
+
     
 }

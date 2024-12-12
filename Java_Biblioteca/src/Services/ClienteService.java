@@ -1,11 +1,9 @@
 package Services;
 
 import java.util.List;
-import java.util.Scanner;
 
 import DAO.ClienteDAO;
 import Entities.Cliente;
-
 
 import Utils.DatabaseUtils;
 import Utils.InputUtils;
@@ -14,9 +12,9 @@ public class ClienteService {
 	private InputUtils inputUtils;
 	private ClienteDAO clienteDAO;
 	
-	public ClienteService(InputUtils inputUtils, ClienteDAO clienteDAO) {
-		this.inputUtils = inputUtils;
+	public ClienteService(ClienteDAO clienteDAO, InputUtils inputUtils) {
 		this.clienteDAO = clienteDAO;
+		this.inputUtils = inputUtils;
 	}
 	
 	public void listarClientes() {
@@ -28,7 +26,6 @@ public class ClienteService {
 		for (Cliente cliente : clienteDAO.listarTodos()) {
 			System.out.println(cliente);
 		}
-		System.out.println();
 		
 	}
 

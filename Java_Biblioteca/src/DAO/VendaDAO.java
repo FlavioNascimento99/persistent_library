@@ -17,6 +17,7 @@ public class VendaDAO {
 	
 	public void salvar(Venda venda) {
 		database.store(venda);
+		database.commit();
 	}
 
 	public List<Venda> listarTodas() {

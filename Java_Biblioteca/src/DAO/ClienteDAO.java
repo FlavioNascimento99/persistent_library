@@ -16,6 +16,7 @@ public class ClienteDAO {
 
     public void salvar(Cliente cliente) {
         database.store(cliente);
+        database.commit();
     }
 
     public Cliente buscaPorCpf(String cpf) {
@@ -42,6 +43,6 @@ public class ClienteDAO {
         query.descend("cpf").constrain(clienteADeletar);
         
         database.delete(clienteADeletar);
-        query.execute();
+        database.commit();
     }
 }

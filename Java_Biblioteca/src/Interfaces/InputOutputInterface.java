@@ -1,56 +1,40 @@
 package Interfaces;
 
-import java.util.Locale;
-import java.util.Scanner;
-
 import Services.ClienteService;
 import Services.LivroService;
 import Services.VendaService;
 
-import Utils.DatabaseUtils;
 import Utils.InputUtils;
 
 public class InputOutputInterface {
 	private ClienteService clienteService;
 	private LivroService livroService;
 	private VendaService vendaService;
+	private InputUtils inputUtils;
 	
-	public InputOutputInterface(ClienteService clienteService, LivroService livroService, VendaService vendaService) {
+	public InputOutputInterface(ClienteService clienteService, LivroService livroService, VendaService vendaService, InputUtils inputUtils) {
 		this.clienteService = clienteService;
 		this.livroService = livroService;
 		this.vendaService = vendaService;
+		this.inputUtils = inputUtils;
 	}
 	
-	public void InterfacePrinter(Scanner scanner) {
+	public void InterfacePrinter() {
 		
-	    boolean running = false;
-	    while (running) {
+	    while (true) {
 	        System.out.println("=====================================");
 	        System.out.println("||      Sistema de Livraria        ||");
 	        System.out.println("=====================================");
+	        System.out.println("1. Livro.Cadastro");
+	        System.out.println("2. Livro.Listagem");
+	        System.out.println("3. Livro.Busca");
+	        System.out.println("4. Cliente.Cadastro");
+	        System.out.println("5. Cliente.Listagem");
+	        System.out.println("6. Cliente.Exclusão");
+	        System.out.println("7. Venda.Cadastrar");
+	        System.out.println("8. * Fechar *");
 	        
-	        System.out.println("==== Livros ====");
-	        System.out.println("1. Cadastro");
-	        System.out.println("2. Listagem");
-	        System.out.println("3. Busca");
-	        
-	        System.out.println("==== Clientes ====");
-	        System.out.println("4. Cadastro");
-	        System.out.println("5. Listagem");
-	        System.out.println("6. Exclusão");
-	        
-	        System.out.println("==== Vendas ====");
-	        System.out.println("7. Realizar Venda!");
-	        
-	        System.out.println("-------------------");
-	        
-	        System.out.println("8. Fechar");
-	        
-	        System.out.println("Escolha uma opção: ");
-	
-	        int opcao = scanner.nextInt();
-	        scanner.nextLine();
-	        
+	        int opcao = inputUtils.confirmMenuSelection("O que deseja: ", 1, 8);
 	        switch (opcao) {
 	            case 1:
 	            	livroService.cadastrarLivro();
@@ -71,17 +55,15 @@ public class InputOutputInterface {
 	            	clienteService.deletarCliente();
 	            	break;
 	            case 7:
-	                realizarVenda(scanner); // To-do
+	                vendaService.realizarVenda(); // To-do
 	                break;
 	            case 8:
 	                System.out.println("Saindo do sistema...");
-	                running = false;
-	                break;
+	                return;
 	            default:
 	                System.out.println("Opção inválida. Tente novamente.");
 	        }
-	
-	    scanner.close();
-	    Util.closeDatabase(); // Garantir fechamento do banco de dados
 	    }
+	    
+	}
 }

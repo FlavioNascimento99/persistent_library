@@ -9,7 +9,7 @@ public class InputUtils {
 		this.scanner = scanner;
 	}
 	
-
+	
 	public int integerInput(String message) {	
 		while(true) {
 			try {
@@ -47,7 +47,7 @@ public class InputUtils {
 		}
 	}
 	
-	
+
 	public boolean booleanInput(String message) {
 		while(true) {
 			System.out.print(message);
@@ -62,6 +62,7 @@ public class InputUtils {
 		}
 	}
 	
+	
 	public int confirmMenuSelection(String message, int min, int max) {
 		while(true) {
 			int menuSelected = integerInput(message);
@@ -73,4 +74,12 @@ public class InputUtils {
 		}
 	}
 	
+	public Scanner inputOpen() {
+		Scanner s = new Scanner(System.in);
+		return s;
+	}
+	
+	public void inputClose() {
+		scanner.close();
+	}
 }
