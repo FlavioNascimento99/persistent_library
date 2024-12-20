@@ -3,13 +3,6 @@
 **Flavio Nascimento** | **Novembro de 2024**
 
 ![License](https://img.shields.io/badge/license-MIT-blue)
-
-## Instalação
-  ```On git bash```
-
-  ```git clone https://github.dev/FlavioNascimento99/Java_Biblioteca```
-
-  
   
 ## Descrição
 Sistema desenvolvido com objetivo de aprofundar conhecimentos em persistência de objetos e conceito em separação de responsabilidades com *Data Access Object*. Se trata de um software de gerenciamento de vendas de uma Biblioteca/Livraria com diversas entidades e relacionamentos, a princípio, fazendo uso de um Banco de Dados embarcado, o DB4o (DataBase 4 object), mas que no futuro próximo, será devidamente adaptado para conectar-se a bancos de dados relacional (PostgreSQL) e não-relacional (MongoDB). Sistema onde desenvolvi melhor minha visão em relação à como funciona um sistema com múltiplas camadas e suas vantagens a medida que o mesmo necessitava de atualizações em sua lógica.
@@ -36,8 +29,8 @@ As entidades presentes dentro do sistema são:
 | Entidade      | Atributos                                                                                   |
 |---------------|---------------------------------------------------------------------------------------------|
 | **Livro**     | `id`, `nome`, `autor`, `preco`                                                              |
-| **Cliente**   | `cpf`, `nome`, `<listaDeVendas>`                                                            |
-| **Venda**     | `id`, `cliente`, `valorTotal`, `List<ItemVenda> itens`                                      |
+| **Cliente**   | `cpf`, `nome`, `List<listaDeVendas>`                                                            |
+| **Venda**     | `id`, `Cliente cliente`, `valorTotal`, `List<ItemVenda> itens`                                      |
 | **ItemVenda** | `id`, `Livro livro`, `quantidade`, `precoTotal`                                             |
 
 
