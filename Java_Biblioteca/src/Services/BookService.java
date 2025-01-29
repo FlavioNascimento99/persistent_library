@@ -16,7 +16,7 @@ public class BookService {
         this.bookDAO = bookDAO;
     }
 	
-    public void listarLivros() {
+    public void listAll() {
         System.out.println("\n--- Lista de Livros ---");
         bookDAO = new BookDAO(DatabaseUtils.openDatabase());
         for (Book book : bookDAO.listAll()) {

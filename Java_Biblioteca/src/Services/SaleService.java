@@ -27,8 +27,6 @@ public class SaleService {
 		this.bookDAO = livroDAO;
 	}
 	
-	
-	// TODO: Apply clean-code concepts into VendaService;
     public List<Client> createConnectionAndCaptureClients() {
     	System.out.println("\n --- Realize a venda ---");
     	clientDAO = new ClientDAO(DatabaseUtils.openDatabase());
@@ -40,11 +38,8 @@ public class SaleService {
     			System.out.println((i + 1) + ". " + clientListing.get(i).getName() + " (CPF: " + clientListing.get(i).getCpf() + ")");
     		}
     	}
-
     	return clientListing;
     }
-    
-    
     
     public Client collectValueFromClienteList(List<Client> clientListing) {
     	int clientMenuIndexBasedSellect = inputUtils.integerInput("Escolha o número Identificador do Cliente: ");
@@ -52,12 +47,9 @@ public class SaleService {
     	return selectedClient;
     }
     
-    
-    public List<Book> selectBookFromListToSell(BookDAO bookDAO) {
-    	
+    public List<Book> selectBookFromListToSell() {
     	bookDAO = new BookDAO(DatabaseUtils.openDatabase());
     	List<Book> booksListing = bookDAO.listAll();
-    	
     	if (booksListing.isEmpty()) {
             System.out.println("Não há livros cadastrados para realizar a venda.");
     	} else {
@@ -66,60 +58,35 @@ public class SaleService {
         		System.out.println((i + 1) + booksListing.get(i).getTitle() + " - Preço: R$ " + booksListing.get(i).getPrice());
         	}
     	}
-    	
     	return booksListing;
-    }
-	
-	/**
-	 * 
-	 * TODO Corrige essa merda aqui.
-	 * 
-	 * :P
-	 * 
-	 * */
-    public void realizarVenda() {
-        
-        
-        bookDAO = new BookDAO(DatabaseUtils.openDatabase());
-        List<Book> books = bookDAO.listAll();
-        
-        if (books.isEmpty()) {
-            System.out.println("Não há livros cadastrados para realizar a venda.");
-            return;
-        }
-
-        System.out.println("Selecione os livros para a venda:");
-        for (int i = 0; i < books.size(); i++) {
-            System.out.println((i + 1) + ". " + books.get(i).getTitle() + " - Preço: R$" + books.get(i).getPrice());
-        }
-        List<ItemSale> saleItems = new ArrayList<>();
-        boolean addMoreBooksToSale = true;
-        while (addMoreBooksToSale) {
-            System.out.print("Escolha o número do livro para adicionar à venda: ");
-            int bookIndex = inputUtils.integerInput("") - 1;            
-            int bookQuantity = inputUtils.integerInput("Quantos exemplares você deseja adquirir? ");
-            Book selectedBookByIndex = books.get(bookIndex);
-            ItemSale cart = new ItemSale(selectedBookByIndex, bookQuantity);
-            saleItems.add(cart);
-            System.out.print("Deseja adicionar outro livro? (s/n): ");
+    }    
+    
+    public List<ItemSale> addingMoreBooksToSale(List<Book> bookListing) {
+    	List<ItemSale> saleItems = new ArrayList<>();
+    	boolean addMoreBooksToSale = true;
+    	while(addMoreBooksToSale) {
+    		System.out.println("Escolha o livro desejado para venda: ");
+    		int bookIndex = inputUtils.integerInput("") - 1;
+    		int bookQuantity = inputUtils.integerInput("Quantos exemplares você deseja adquirir? ");
+    		Book selectedBookFromIndex = bookListing.get(bookIndex);
+    		ItemSale cart = new ItemSale(selectedBookFromIndex, bookQuantity);
+    		saleItems.add(cart);
             Boolean buyResponse = inputUtils.booleanInput("Deseja adicionar mais algum produto? (s/n)");
-            if (!buyResponse.equals(true)) {
-                addMoreBooksToSale = false;
+            if(!buyResponse.equals(true)) {
+            	addMoreBooksToSale = false;
             }
-        }
-        
-        
-        // Well done lil nigga.
-        Date confirmedSale = new Date();
-        
-        // for-loop response
-        Sale sale = new Sale(saleItems, selectedClient, confirmedSale);
+    	}
+    	return saleItems;
+    }
+    
+    public void confirmSaleAndDatePrint(List<ItemSale> saleItems, Client selectedClient ) {
+    	Date confirmedSale = new Date();
+    	Sale sale = new Sale(saleItems, selectedClient, confirmedSale);
         System.out.println("\n--- Venda Realizada com Sucesso ---");
         System.out.println("Cliente: " + selectedClient.getName());
         System.out.println("Total da venda: R$ " + sale.calculateTotalSaleValue());
-
         SaleDAO saleDAO = new SaleDAO(DatabaseUtils.openDatabase());
         saleDAO.save(sale);
-        System.out.println("Venda registrada no sistema!\n");
+        System.out.println("Venda realizada com sucesso.");
     }
 }

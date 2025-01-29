@@ -7,15 +7,15 @@ import Services.SaleService;
 import Utils.InputUtils;
 
 public class InputOutputInterface {
-	private ClientService clienteService;
-	private BookService livroService;
-	private SaleService vendaService;
+	private ClientService clientService;
+	private BookService bookService;
+	private SaleService saleService;
 	private InputUtils inputUtils;
 	
 	public InputOutputInterface(ClientService clienteService, BookService livroService, SaleService vendaService, InputUtils inputUtils) {
-		this.clienteService = clienteService;
-		this.livroService = livroService;
-		this.vendaService = vendaService;
+		this.clientService = clientService;
+		this.bookService = bookService;
+		this.saleService = saleService;
 		this.inputUtils = inputUtils;
 	}
 	
@@ -37,13 +37,13 @@ public class InputOutputInterface {
 	        int opcao = inputUtils.confirmMenuSelection("O que deseja: ", 1, 8);
 	        switch (opcao) {
 	            case 1:
-	            	livroService.cadastrarLivro();
+	            	bookService.addBook();
 	                break;
 	            case 2:
-	                livroService.listarLivros();
+	                bookService.listarLivros();
 	                break;
 	            case 3:
-	                livroService.buscarLivroPorTitulo();
+	                bookService.searchBookByTitle();
 	                break;
 	            case 4:
 	                clienteService.cadastrarCliente();

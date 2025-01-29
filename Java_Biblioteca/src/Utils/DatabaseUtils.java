@@ -4,9 +4,9 @@ import com.db4o.ObjectContainer;
 import com.db4o.Db4oEmbedded;
 import com.db4o.config.EmbeddedConfiguration;
 
-import Entities.Cliente;
+import Entities.Client;
 import Entities.ItemSale;
-import Entities.Venda;
+import Entities.Sale;
 
 public class DatabaseUtils {
 	
@@ -20,12 +20,12 @@ public class DatabaseUtils {
             // Criamos o objeto de configuração zerado.
             EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
             // Adicionamos a sua configuração, Cascata de Atualizações, para salvar automaticamente objetos relacionados.
-            config.common().objectClass(Venda.class).cascadeOnUpdate(true);
-            config.common().objectClass(Cliente.class).cascadeOnUpdate(true);
+            config.common().objectClass(Sale.class).cascadeOnUpdate(true);
+            config.common().objectClass(Client.class).cascadeOnUpdate(true);
             config.common().objectClass(ItemSale.class).cascadeOnUpdate(true);
 
-            config.common().objectClass(Venda.class).cascadeOnDelete(true);
-            config.common().objectClass(Cliente.class).cascadeOnDelete(true);
+            config.common().objectClass(Sale.class).cascadeOnDelete(true);
+            config.common().objectClass(Client.class).cascadeOnDelete(true);
             // Por fim, abrimos o banco com as configurações estabelecidas.
             database = Db4oEmbedded.openFile(config, "databaseBiblioteca.db4o");
             
