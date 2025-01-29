@@ -1,14 +1,14 @@
 
 import java.util.Scanner;
 
-import DAO.ClienteDAO;
-import DAO.LivroDAO;
+import DAO.ClientDAO;
+import DAO.BookDAO;
 
 import Interfaces.InputOutputInterface;
 
-import Services.ClienteService;
-import Services.LivroService;
-import Services.VendaService;
+import Services.ClientService;
+import Services.BookService;
+import Services.SaleService;
 
 import Utils.DatabaseUtils;
 import Utils.InputUtils;
@@ -20,12 +20,12 @@ public class Main {
     	
     	var data = DatabaseUtils.openDatabase();
     	
-    	LivroDAO livroDAO = new LivroDAO(data);
-    	ClienteDAO clienteDAO = new ClienteDAO(data);
+    	BookDAO livroDAO = new BookDAO(data);
+    	ClientDAO clienteDAO = new ClientDAO(data);
     	
-    	LivroService livroService = new LivroService(livroDAO, inputUtils);
-    	ClienteService clienteService = new ClienteService(clienteDAO, inputUtils);
-    	VendaService vendaService = new VendaService(inputUtils, clienteDAO, livroDAO);
+    	BookService livroService = new BookService(livroDAO, inputUtils);
+    	ClientService clienteService = new ClientService(clienteDAO, inputUtils);
+    	SaleService vendaService = new SaleService(inputUtils, clienteDAO, livroDAO);
 
     	InputOutputInterface inputOutputInterface = new InputOutputInterface(clienteService, livroService, vendaService, inputUtils);
     	

@@ -5,7 +5,7 @@ import com.db4o.Db4oEmbedded;
 import com.db4o.config.EmbeddedConfiguration;
 
 import Entities.Cliente;
-import Entities.ItemVenda;
+import Entities.ItemSale;
 import Entities.Venda;
 
 public class DatabaseUtils {
@@ -22,7 +22,7 @@ public class DatabaseUtils {
             // Adicionamos a sua configuração, Cascata de Atualizações, para salvar automaticamente objetos relacionados.
             config.common().objectClass(Venda.class).cascadeOnUpdate(true);
             config.common().objectClass(Cliente.class).cascadeOnUpdate(true);
-            config.common().objectClass(ItemVenda.class).cascadeOnUpdate(true);
+            config.common().objectClass(ItemSale.class).cascadeOnUpdate(true);
 
             config.common().objectClass(Venda.class).cascadeOnDelete(true);
             config.common().objectClass(Cliente.class).cascadeOnDelete(true);

@@ -1,18 +1,18 @@
 package Interfaces;
 
-import Services.ClienteService;
-import Services.LivroService;
-import Services.VendaService;
+import Services.ClientService;
+import Services.BookService;
+import Services.SaleService;
 
 import Utils.InputUtils;
 
 public class InputOutputInterface {
-	private ClienteService clienteService;
-	private LivroService livroService;
-	private VendaService vendaService;
+	private ClientService clienteService;
+	private BookService livroService;
+	private SaleService vendaService;
 	private InputUtils inputUtils;
 	
-	public InputOutputInterface(ClienteService clienteService, LivroService livroService, VendaService vendaService, InputUtils inputUtils) {
+	public InputOutputInterface(ClientService clienteService, BookService livroService, SaleService vendaService, InputUtils inputUtils) {
 		this.clienteService = clienteService;
 		this.livroService = livroService;
 		this.vendaService = vendaService;
