@@ -17,50 +17,34 @@ public class ClientService {
 		this.inputUtils = inputUtils;
 	}
 	
-	public void listarClientes() {
-		
+	public void listAll() {
 		System.out.println("\n--- Lista de Clientes ---");
-		
 		ClientDAO clientDAO = new ClientDAO(DatabaseUtils.openDatabase());
-		
 		for (Client client : clientDAO.listAll()) {
 			System.out.println(client);
 		}
-		
 	}
 
 	public void addClient() {
-		
         System.out.println("\n--- Cadastro de Cliente ---");
-        
         String name = inputUtils.stringInput("Name: ");
         String cpf = inputUtils.stringInput("CPF: ");
-        
         Client client = new Client(name, cpf);
-        
         clientDAO.save(client);
-        
         System.out.println("Cliente cadastrado com sucesso!\n");
-        
     }
 
 	public void deleteClient() {
-        
-		System.out.println("\n--- Realizar Exclusão - Clientes ---");
-        
+		System.out.println("\n--- Realizar Exclusão - Clientes ---");;
         clientDAO = new ClientDAO(DatabaseUtils.openDatabase());
-        
         List<Client> clientList = clientDAO.listAll();
-        
         if (clientList.isEmpty()) {
             System.out.println("Não há clientes cadastrados.");
             return;
         }
-        
         for( int i=0;i < clientList.size(); i++) {
         	System.out.println((i + 1) +". " + clientList.get(i).getName() + " CPF: " + clientList.get(i).getCpf());
         }
-        
         int option;
         try {
         	option = inputUtils.integerInput("Qual opcao deseja deletar: ");
@@ -84,7 +68,5 @@ public class ClientService {
         } else {
         	System.out.println("Operação cancelada.");
     	}
-        
     }
-	
 }

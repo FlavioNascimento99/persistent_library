@@ -35,9 +35,9 @@ public class BookService {
     }
 
     public void searchBookByTitle() {
+    	DatabaseUtils.openDatabase();
         System.out.println("\n--- Buscar Livro por Título ---");
-        String title = inputUtils.stringInput("Digite o nome do livro que deseja encontrar: ");
-        BookDAO bookDAO = new BookDAO(DatabaseUtils.openDatabase());
+        String title = inputUtils.stringInput("Digite um nome que componha o título do livro: ");
         List<Book> bookResultList = bookDAO.searchByTitle(title);
     	if(bookResultList.isEmpty()){ 
     		System.out.println("Não foi encontrado nenhum titulo");
@@ -46,6 +46,5 @@ public class BookService {
     			System.out.println("Resultado da busca: " + book);    			
     		}
     	}
-        
     }
 }

@@ -23,26 +23,15 @@ public class DatabaseUtils {
             config.common().objectClass(Sale.class).cascadeOnUpdate(true);
             config.common().objectClass(Client.class).cascadeOnUpdate(true);
             config.common().objectClass(ItemSale.class).cascadeOnUpdate(true);
-
-            config.common().objectClass(Sale.class).cascadeOnDelete(true);
-            config.common().objectClass(Client.class).cascadeOnDelete(true);
-            // Por fim, abrimos o banco com as configurações estabelecidas.
             database = Db4oEmbedded.openFile(config, "databaseBiblioteca.db4o");
-            
         }
-        
-        // Retornamos o banco de dados aberto.
         return database;
-        
     }
 
     public static void closeDatabase() {
-    	
-    	// 
         if (database != null && !database.ext().isClosed()) {
             database.close();
-        }
-        
+        }   
     }
     
 }

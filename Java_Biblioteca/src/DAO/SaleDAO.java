@@ -41,7 +41,7 @@ public class SaleDAO {
 		return query.execute();
 	}
 
-	public void deletar(Sale sale) {
+	public void delete(Sale sale) {
         database.delete(sale);
     }
 }

@@ -12,7 +12,7 @@ public class InputOutputInterface {
 	private SaleService saleService;
 	private InputUtils inputUtils;
 	
-	public InputOutputInterface(ClientService clienteService, BookService livroService, SaleService vendaService, InputUtils inputUtils) {
+	public InputOutputInterface(ClientService clientService, BookService bookService, SaleService saleService, InputUtils inputUtils) {
 		this.clientService = clientService;
 		this.bookService = bookService;
 		this.saleService = saleService;
@@ -40,22 +40,22 @@ public class InputOutputInterface {
 	            	bookService.addBook();
 	                break;
 	            case 2:
-	                bookService.listarLivros();
+	                bookService.listAll();
 	                break;
 	            case 3:
 	                bookService.searchBookByTitle();
 	                break;
 	            case 4:
-	                clienteService.cadastrarCliente();
+	                clientService.addClient();
 	                break;
 	            case 5:
-	                clienteService.listarClientes();
+	                clientService.listAll();
 	                break;
 	            case 6:
-	            	clienteService.deletarCliente();
+	            	clientService.deleteClient();
 	            	break;
 	            case 7:
-	                vendaService.realizarVenda(); // To-do
+	                saleService.finallySale();
 	                break;
 	            case 8:
 	                System.out.println("Saindo do sistema...");
