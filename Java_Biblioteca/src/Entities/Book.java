@@ -1,10 +1,25 @@
 package Entities;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "books")
 public class Book {
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
+	
 	private String title;
 	private String author;
 	private double price;
+	
+	// Constructors
+	public Book(){}
 	
 	public Book(String title, String author, Double price){
 		this.title = title;
@@ -12,7 +27,9 @@ public class Book {
 		this.price = price;
 	}
 	
-// Getters
+	
+	
+	// Getters
     public int getId() {
         return id;
     }

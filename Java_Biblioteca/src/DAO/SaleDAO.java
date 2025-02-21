@@ -2,46 +2,50 @@ package DAO;
 
 import java.util.List;
 
-import com.db4o.*;
-import com.db4o.query.*;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import Entities.Client;
 import Entities.Sale;
+import Utils.Database;
 
 public class SaleDAO {
-	private ObjectContainer database;
+	private EntityManager manager;
 	
-	public SaleDAO(ObjectContainer database) {
-		this.database = database;
-	}
+	public SaleDAO(){}
 	
 	public void save(Sale sale) {
-		database.store(sale);
-		database.commit();
+		manager.persist(sale);
+		manager.getTransaction().commit();
+		manager.close();
 	}
 
 	public List<Sale> listAll() {
-		Query query = database.query();
-		query.constrain(Sale.class);
-		return query.execute();
+		TypedQuery<Sale> saleQuery = manager.createQuery("select s from Sale s", Sale.class);
+		List<Sale> resultQuery = saleQuery.getResultList();
+		return resultQuery;
 	}
 	
-	public Sale searchById(int id) {	
-		Query query = database.query();
-		query.constrain(Sale.class);
-		query.descend("id").constrain(id);
-		List<Sale> result = query.execute();
-		return result.isEmpty() ? null : result.get(0);
+	public Sale searchById(int id) {
+		TypedQuery<Sale> saleQuery = manager.createQuery("select s from Sale s where s.id = :id", Sale.class);
+		saleQuery.setParameter("id", id);
+		return saleQuery.getSingleResult();
 	}
 
-	public List<Sale> listClient(Client client) {
-		Query query = database.query();
-		query.constrain(Sale.class);
-		query.descend("cliente").constrain(client);
-		return query.execute();
-	}
+// 	I don't remember how, when or why i've created this.
+	
+//	public List<Sale> listClient(Client client) {
+//		Query query = database.query();
+//		query.constrain(Sale.class);
+//		query.descend("cliente").constrain(client);
+//		return query.execute();
+//	}
 
-	public void delete(Sale sale) {
-        database.delete(sale);
-    }
+	
+// 	I was completelly out of my miind creating this one, wtf is "delete Sale"? tax evasion? 
+	
+//	public void delete(Sale sale) {
+//		TypedQuery<Sale> saleQuery = manager.createQuery("select s from Sale s where s.id = :id", Sale.class);
+//		saleQuery.setParameter("id", Sale.id);
+//    }
 }
