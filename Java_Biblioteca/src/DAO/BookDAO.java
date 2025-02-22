@@ -12,11 +12,14 @@ public class BookDAO {
   	
 	// Bad constructor... 
     public BookDAO(){}
+    
+    public BookDAO(EntityManager manager) {
+    	this.manager = manager;
+    }
 
-    public void save(Book book) {
+    public void save(Book book,EntityManager manager) {
         manager.persist(book);
-        manager.getTransaction().commit();
-        manager.close();
+        manager.flush();
     }
 
     public List<Book> listAll() {
@@ -32,6 +35,5 @@ public class BookDAO {
     	return bookQuery.getResultList();
     }
   
-    // TODO gawd dammit lil bro, when you came here and write this??
-	// public livrosPromocao() { }
+
 }

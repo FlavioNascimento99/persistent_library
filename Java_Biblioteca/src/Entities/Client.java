@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
@@ -17,6 +18,9 @@ public class Client {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private String cpf;
 	private String name;
+	
+	// One single Client has MANY Sale's into a list of it.
+	@OneToMany(mappedBy="client")
 	private List<Sale> salesList;
 	
 	public Client(String name, String cpf) {

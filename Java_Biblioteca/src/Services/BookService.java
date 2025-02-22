@@ -7,48 +7,65 @@ import javax.persistence.EntityManager;
 import DAO.BookDAO;
 import Entities.Book;
 import Utils.Database;
-import Utils.InputUtils;
+import Utils.Input;
 
 public class BookService {
-	private InputUtils inputUtils;
+	private Input input;
 	private BookDAO bookDAO;
 	private EntityManager manager;
 
+	public BookService() {}
+	public BookService(BookDAO bookDAO, Input input) {
+		this.input = input;
+		this.bookDAO = bookDAO;
+	}
 	
     public void listAll() {
-    	manager = Database.openConnection();
-    	System.out.println("\n--- Lista de Livros ---");
-        for (Book book : bookDAO.listAll()) {
-            System.out.println(book);
+        try {
+            manager = Database.openConnection();
+            System.out.println("\n--- Lista de Livros ---");
+            for (Book book : bookDAO.listAll()) {
+                System.out.println(book);
+            }
+        } finally {
+            Database.closeConnection(manager);  // Garante o fechamento no final
         }
     }
 	
 	public void addBook() {
 		try {
-	    	manager = Database.openConnection();
-	        System.out.println("\n--- Cadastro de Livro ---");
+			manager = Database.openConnection();
 			manager.getTransaction().begin();
-			String title = inputUtils.stringInput("Titulo: ");
-	        String author = inputUtils.stringInput("Autor: ");
-	        Double price = inputUtils.doubleInput("Valor do Produto: ");
+			
+			System.out.println("\n--- Cadastro de Livro ---");
+			
+			String title = input.stringInput("Titulo: ");
+	        String author = input.stringInput("Autor: ");
+	        Double price = input.doubleInput("Valor do Produto: ");
 	        Book book = new Book(title, author, price);
-	        bookDAO.save(book);
+	        
+	        bookDAO.save(book, manager);
+	        
+	        manager.getTransaction().commit();	        
+
 	        System.out.println("Livro cadastrado com sucesso!\n");
+	        
 		}
 		catch(Exception e) {
-			manager.getTransaction().rollback();
+			if (manager.getTransaction().isActive()) {
+				manager.getTransaction().rollback();				
+			}
 			System.out.println(e.getMessage());
 		}
-		Database.closeConnection();
-    }
+		Database.closeConnection(manager);
+	}
 
     public void searchBookByTitle() {
-
     	try {
         	manager = Database.openConnection();
         	System.out.println("\n--- Buscar Livro por Título ---");
         	
-        	String title = inputUtils.stringInput("Digite um nome que componha o título do livro: ");
+        	String title = input.stringInput("Digite um nome que componha o título do livro: ");
         	List<Book> result = bookDAO.searchByTitle(title);
         	        	
         	if(result.isEmpty()){ 
@@ -62,6 +79,5 @@ public class BookService {
     		manager.getTransaction().rollback();
     		System.out.println(e.getMessage());
     	}
-    	
     } 
 }

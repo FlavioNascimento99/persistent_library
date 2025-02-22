@@ -6,33 +6,37 @@ import javax.persistence.Persistence;
 /*
  * Ler sobre
  * 
- * - Persistence.createEntityManagerFactory()
  * - O que e factory e manager dentro deste contexto?
- * - 
+ * 		Factory cria instancias de Manager. 
  * 
 */
 
 public class Database {
-	private static EntityManager manager;
     private static EntityManagerFactory factory;
 
-    public static EntityManager openConnection() {
-    	if (factory == null) {
+    static {
+    	try {
     		factory = Persistence.createEntityManagerFactory("hibernate-mysql");
-    		manager = factory.createEntityManager();
-    	}		
-		return manager;
-    }
-    
-    public static void closeConnection() {
-    	if(factory != null && manager.isOpen()) {
-    		manager.close();
-    		factory.close();
-    		
-    		manager = null;
+    	} catch(Exception e) {
+    		throw new RuntimeException("Erro ao inicializar o EntityManagerFactory" + e.getMessage());
     	}
     }
     
+    public static EntityManager openConnection() {
+    	return factory.createEntityManager();
+    }
+    
+    public static void closeConnection(EntityManager manager) {
+    	if(manager != null && manager.isOpen()) {
+    		manager.close();
+    	}
+    }
+    
+    public static void shutdown() {
+    	if(factory != null && factory.isOpen()) {
+    		factory.close();
+    	}
+    }
 }
 
 

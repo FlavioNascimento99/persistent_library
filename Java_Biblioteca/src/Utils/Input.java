@@ -2,10 +2,10 @@ package Utils;
 
 import java.util.Scanner;
 
-public class InputUtils {
+public class Input {
 	private Scanner scanner;
 	
-	public InputUtils(Scanner scanner) {
+	public Input(Scanner scanner) {
 		this.scanner = scanner;
 	}
 	

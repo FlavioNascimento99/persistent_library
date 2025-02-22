@@ -14,6 +14,9 @@ public class SaleDAO {
 	
 	public SaleDAO(){}
 	
+	// Just for run sometimes static method from Database through manager
+	public SaleDAO(EntityManager manager){}
+	
 	public void save(Sale sale) {
 		manager.persist(sale);
 		manager.getTransaction().commit();
@@ -42,7 +45,7 @@ public class SaleDAO {
 //	}
 
 	
-// 	I was completelly out of my miind creating this one, wtf is "delete Sale"? tax evasion? 
+// 	I was completelly out of my mind creating this one, wtf is "delete Sale"? tax evasion? 
 	
 //	public void delete(Sale sale) {
 //		TypedQuery<Sale> saleQuery = manager.createQuery("select s from Sale s where s.id = :id", Sale.class);

@@ -11,6 +11,8 @@ public class ClientDAO {
     private EntityManager manager;
 
     public ClientDAO() {}
+    
+    public ClientDAO(EntityManager manager) {}
 
     public void save(Client client) {
         manager.persist(client);

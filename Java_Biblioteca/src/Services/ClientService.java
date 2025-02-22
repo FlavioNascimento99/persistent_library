@@ -8,14 +8,16 @@ import DAO.ClientDAO;
 import Entities.Client;
 
 import Utils.Database;
-import Utils.InputUtils;
+import Utils.Input;
 
 public class ClientService {
-	private InputUtils inputUtils;
+	private Input inputUtils;
 	private ClientDAO clientDAO;
 	private EntityManager manager;
 	
-	public ClientService() { }
+	public ClientService() {}
+	public ClientService(EntityManager manager) {}
+	public ClientService(ClientDAO clientDAO, Input input) {}
 	
 	public void listAll() {
 		try {

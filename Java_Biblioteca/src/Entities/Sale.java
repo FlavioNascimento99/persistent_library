@@ -30,6 +30,7 @@ public class Sale {
 	@Temporal(TemporalType.DATE)
 	private Date dateSale;
 	
+	// i dunno if that is rlly necessary 
 	private double totalValue;
 	
 	@OneToMany(mappedBy = "sale", cascade = CascadeType.ALL)

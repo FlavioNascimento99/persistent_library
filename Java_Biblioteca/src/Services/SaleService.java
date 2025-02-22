@@ -1,9 +1,9 @@
 package Services;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 
 import DAO.ClientDAO;
 import DAO.BookDAO;
@@ -15,14 +15,15 @@ import Entities.Book;
 import Entities.Sale;
 
 import Utils.Database;
-import Utils.InputUtils;
+import Utils.Input;
 
 public class SaleService {
-	private InputUtils inputUtils;
-	private ClientDAO clientDAO;
+	private Input inputUtils;
 	private BookDAO bookDAO;
+	private ClientDAO clientDAO;
 	
-	public SaleService (InputUtils inputUtils, ClientDAO clientDAO, BookDAO bookDAO) {
+	public SaleService() {}
+	public SaleService(Input inputUtils, ClientDAO clientDAO, BookDAO bookDAO) {
 		this.inputUtils = inputUtils;
 		this.clientDAO = clientDAO;
 		this.bookDAO = bookDAO;
@@ -41,7 +42,7 @@ public class SaleService {
 	 * */
     public List<Client> createConnectionAndCaptureClients() {
     	System.out.println("\n --- Realize a venda ---");
-    	Database.openDatabase();
+    	Database.openConnection();
     	List<Client> clientListing = clientDAO.listAll();
     	if (clientListing.isEmpty()) {
     		System.out.println("Não foi encontrado nenhum cliente registrado.");
@@ -80,7 +81,7 @@ public class SaleService {
      * @return List of <Book> who are stored into Database with Sysout.
      * */
     public List<Book> selectBookFromListToSell() {
-    	Database.openDatabase();
+    	Database.openConnection();
     	List<Book> booksListing = bookDAO.listAll();
     	if (booksListing.isEmpty()) {
             System.out.println("Não há livros cadastrados para realizar a venda.");
@@ -146,7 +147,7 @@ public class SaleService {
      * */
     public Sale confirmSaleAndDatePrint(List<ItemSale> saleItems, Client selectedClient ) {
     	Date confirmedSale = new Date();
-    	SaleDAO saleDAO = new SaleDAO(Database.openDatabase());
+    	SaleDAO saleDAO = new SaleDAO(Database.openConnection());
     	Sale sale = new Sale(saleItems, selectedClient, confirmedSale);
 		System.out.println("Venda efeivada com sucesso - Total da venda: R$ " + sale.calculateTotalSaleValue());
         saleDAO.save(sale);   

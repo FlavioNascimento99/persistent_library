@@ -1,6 +1,8 @@
 
 import java.util.Scanner;
 
+import javax.persistence.EntityManager;
+
 import DAO.ClientDAO;
 import DAO.BookDAO;
 
@@ -11,28 +13,27 @@ import Services.BookService;
 import Services.SaleService;
 
 import Utils.Database;
-import Utils.InputUtils;
+import Utils.Input;
 
 public class Main {
     public static void main(String[] args) {
     	Scanner scannerAtMain = new Scanner(System.in);
-    	InputUtils inputUtils = new InputUtils(scannerAtMain);
+    	Input inputUtils = new Input(scannerAtMain);
     	
-    	var data = Database.openDatabase();
-   		BookDAO livroDAO = new BookDAO(data);
-   		ClientDAO clienteDAO = new ClientDAO(data);
+    	var data = Database.openConnection();
+   		BookDAO bookDAO  = new BookDAO(data);
+   		ClientDAO clientDAO = new ClientDAO(data);
   	
-    	BookService livroService = new BookService(livroDAO, inputUtils);
-    	ClientService clienteService = new ClientService(clienteDAO, inputUtils);
-    	SaleService vendaService = new SaleService(inputUtils, clienteDAO, livroDAO);
+    	BookService bookService = new BookService(bookDAO, inputUtils);
+    	ClientService clientService = new ClientService(clientDAO, inputUtils);
+    	SaleService saleService = new SaleService(inputUtils, clientDAO, bookDAO);
 
-    	InputOutputInterface inputOutputInterface = new InputOutputInterface(clienteService, livroService, vendaService, inputUtils);
+    	InputOutputInterface inputOutputInterface = new InputOutputInterface(clientService, bookService, saleService, inputUtils);
    	
     	 // Exibir Menu Principal
        inputOutputInterface.InterfacePrinter();
 
-        // Fechar conexão com o banco após o uso
-        Database.closeDatabase();
+
         scannerAtMain.close();
 
     }
