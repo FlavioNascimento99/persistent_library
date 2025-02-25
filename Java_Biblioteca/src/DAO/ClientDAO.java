@@ -10,33 +10,48 @@ import Entities.Client;
 public class ClientDAO {
     private EntityManager manager;
 
-    public ClientDAO() {}
-    
-    public ClientDAO(EntityManager manager) {}
+    // Constructors
+    public ClientDAO(EntityManager manager) {this.manager = manager;}
 
-    public void save(Client client) {
+
+
+    public void save(Client client, EntityManager manager) {
+
         manager.persist(client);
-        manager.getTransaction().commit();
-        manager.close();
+
     }
 
-    public List<Client> listAll() {
-    	TypedQuery<Client> clientQuery = manager.createQuery("select c from Client c", Client.class);
+    public void update(Client client, EntityManager manager) {
+        if(client == null) {
+            throw new IllegalArgumentException("DAO: client cannot be null");
+        }
+
+        manager.merge(client);
+    }
+
+    public void delete(Client client, EntityManager manager) {
+
+        TypedQuery<Client> clientQuery = manager.createQuery("SELECT c FROM Client c WHERE c.cpf = :Client", Client.class);
+        clientQuery.setParameter("Client", client);
+        manager.remove(clientQuery);
+
+    }
+
+    public List<Client> list() {
+
+    	TypedQuery<Client> clientQuery = manager.createQuery("SELECT c FROM Client c", Client.class);
     	List<Client> resultQuery = clientQuery.getResultList();
     	return resultQuery;
+
     }
-    
-    public Client searchByCpf(String cpf) {
-    	TypedQuery<Client> clientQuery = manager.createQuery("select c from Client c where c.cpf = :cpf", Client.class);
+
+    // cpf as id 💀
+    public Client search(String cpf) {
+
+    	TypedQuery<Client> clientQuery = manager.createQuery("SELECT c FROM Client c WHERE c.cpf = :cpf", Client.class);
     	clientQuery.setParameter("cpf", cpf);
     	return clientQuery.getSingleResult();
+
     }
-    
-    
-    // Maybe this one doesn't make sense, we just know if that's insane or not after we've done this manager transition.
-    public void delete(Client client) {
-    	TypedQuery<Client> clientQuery = manager.createQuery("select c from Client c wherer c.cpf = :Client", Client.class);
-    	clientQuery.setParameter("Client", client);
-    	manager.remove(clientQuery);
-    }
+
 }

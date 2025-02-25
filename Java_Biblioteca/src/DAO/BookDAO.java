@@ -9,31 +9,47 @@ import Entities.Book;
 
 public class BookDAO {
 	private EntityManager manager;
-  	
-	// Bad constructor... 
-    public BookDAO(){}
-    
+
+    // Constructor.
     public BookDAO(EntityManager manager) {
     	this.manager = manager;
     }
 
-    public void save(Book book,EntityManager manager) {
+
+
+    public void save(Book book, EntityManager manager) {
+
         manager.persist(book);
-        manager.flush();
+
     }
 
-    public List<Book> listAll() {
-    	TypedQuery<Book> bookQuery = manager.createQuery("select b from Book b", Book.class);
+    public void update(Book book, EntityManager manager) {
+        if (book == null) {
+            throw new IllegalArgumentException("O ID do livro nao pode ser nulo.");
+        }
+        manager.merge(book);
+    }
+
+    public void delete(Book book, EntityManager manager) {
+
+        manager.remove(book);
+
+    }
+
+    public List<Book> list() {
+
+    	TypedQuery<Book> bookQuery = manager.createQuery("SELECT b FROM Book b", Book.class);
     	List<Book> resultQuery = bookQuery.getResultList();
     	return resultQuery;
+
     }
-    
-    // List maybe doesn't make sense at this one, but is a minimal issue fr
-    public List<Book> searchByTitle(String title) {
-    	TypedQuery<Book> bookQuery = manager.createQuery("select b from Book b where b.title = :title", Book.class);
-    	bookQuery.setParameter("title", title);
-    	return bookQuery.getResultList();
+
+    public List<Book> search(String title) {
+
+    	TypedQuery<Book> bookQuery = manager.createQuery("SELECT b FROM Book b WHERE LOWER (b.title) LIKE :title", Book.class);
+        bookQuery.setParameter("title", "%" + title.toLowerCase() + "%");
+        return bookQuery.getResultList();
+
     }
-  
 
 }

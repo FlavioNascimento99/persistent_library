@@ -28,36 +28,44 @@ public class InputOutputInterface {
 	        System.out.println("1. Livro.Cadastro");
 	        System.out.println("2. Livro.Listagem");
 	        System.out.println("3. Livro.Busca");
+			System.out.println("4. Livro.Editar");
+			System.out.println("5. Livro.Excluir");
 	        System.out.println("4. Cliente.Cadastro");
 	        System.out.println("5. Cliente.Listagem");
 	        System.out.println("6. Cliente.Exclusão");
 	        System.out.println("7. Venda.Cadastrar");
 	        System.out.println("8. * Fechar *");
 	        
-	        int opcao = input.confirmMenuSelection("O que deseja: ", 1, 8);
+	        int opcao = input.confirmMenuSelection("O que deseja: ", 1, 10);
 	        switch (opcao) {
 	            case 1:
-	            	bookService.addBook();
+	            	bookService.create();
 	                break;
 	            case 2:
-	                bookService.listAll();
+	                bookService.list();
 	                break;
 	            case 3:
-	                bookService.searchBookByTitle();
+	                bookService.search();
 	                break;
-	            case 4:
-	                clientService.addClient();
-	                break;
-	            case 5:
-	                clientService.listAll();
-	                break;
+				case 4:
+					bookService.update();
+					break;
+				case 5:
+					bookService.delete();
+					break;
 	            case 6:
-	            	clientService.deleteClient();
-	            	break;
+	                clientService.create();
+	                break;
 	            case 7:
-	                saleService.finallySale();
+	                clientService.list();
 	                break;
 	            case 8:
+	            	clientService.delete();
+	            	break;
+	            case 9:
+	                saleService.finallySale();
+	                break;
+	            case 10:
 	                System.out.println("Saindo do sistema...");
 	                return;
 	            default:

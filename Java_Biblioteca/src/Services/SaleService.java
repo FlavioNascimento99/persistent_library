@@ -43,7 +43,7 @@ public class SaleService {
     public List<Client> createConnectionAndCaptureClients() {
     	System.out.println("\n --- Realize a venda ---");
     	Database.openConnection();
-    	List<Client> clientListing = clientDAO.listAll();
+    	List<Client> clientListing = clientDAO.list();
     	if (clientListing.isEmpty()) {
     		System.out.println("Não foi encontrado nenhum cliente registrado.");
     	} else {
@@ -82,7 +82,7 @@ public class SaleService {
      * */
     public List<Book> selectBookFromListToSell() {
     	Database.openConnection();
-    	List<Book> booksListing = bookDAO.listAll();
+    	List<Book> booksListing = bookDAO.list();
     	if (booksListing.isEmpty()) {
             System.out.println("Não há livros cadastrados para realizar a venda.");
     	} else {
