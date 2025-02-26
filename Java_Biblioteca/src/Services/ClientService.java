@@ -11,12 +11,24 @@ import Utils.Database;
 import Utils.Input;
 
 public class ClientService {
-	private Input input;
-	private ClientDAO clientDAO;
+	private final Input input;
+	private final ClientDAO clientDAO;
 	private EntityManager manager;
 	
-	public ClientService(ClientDAO clientDAO, Input input) {}
-	
+	public ClientService(ClientDAO clientDAO, Input input) {
+		this.clientDAO = clientDAO;
+		this.input = input;
+	}
+
+
+
+
+
+	/*
+	*
+	* 		CRUD Methods
+	*
+	*/
 	public void list() {
 		
 		try {
@@ -41,29 +53,38 @@ public class ClientService {
 	public void create() {
 
 		try {
-
 			manager = Database.openConnection();
-			System.out.println("\n--- Cadastro de Cliente ---");
-
 			manager.getTransaction().begin();
 
+			System.out.println("\n--- Cadastro de Cliente ---");
+
 			String name = input.stringInput("Name: ");
-			String cpf = input.stringInput("CPF: ");
-			Client client = new Client(name, cpf);
+
+
+			Client client = new Client(name);
 
 			clientDAO.save(client, manager);
 			manager.getTransaction().commit();
-
 			System.out.println("Cliente cadastrado com sucesso!\n");
 
-		} catch (Exception e) {
+		}
+
+
+		catch(Exception e) {
 
 			System.out.println("Erro: " + e.getMessage());
 
-			manager.getTransaction().rollback();
+			if (manager.getTransaction().isActive()) {
 
-		} finally {
+				manager.getTransaction().rollback();
 
+			}
+
+		}
+
+		finally {
+
+			System.out.println("\nClientes cadastrados com sucesso!\n");
 			Database.closeConnection(manager);
 
 		}
@@ -74,6 +95,8 @@ public class ClientService {
 		try {
 
 			manager = Database.openConnection();
+			manager.getTransaction().begin();
+
 			System.out.println("\n--- Realizar Exclusão - Clientes ---");
 
 			List<Client> clientList = clientDAO.list();
@@ -86,7 +109,7 @@ public class ClientService {
 
 				for( int i=0;i < clientList.size(); i++) {
 
-					System.out.println((i + 1) +". " + clientList.get(i).getName() + " CPF: " + clientList.get(i).getCpf());
+					System.out.println((i + 1) +". " + clientList.get(i).getName() + " ID: " + clientList.get(i).getId());
 
 				}
 
@@ -101,12 +124,13 @@ public class ClientService {
 				// Selected <Client> from For-Loop
 				Client selectedClient = clientList.get(option -1);
 
-				String confirmedClient = input.stringInput("Tem certeza de qe deseja excluir o cliente " + selectedClient.getName() + ", CPF: " + selectedClient.getCpf() + "(s/n): ");
+				String confirmedClient = input.stringInput("Tem certeza de qe deseja excluir o cliente " + selectedClient.getName() + ", CPF: " + selectedClient.getId() + "(s/n): ");
 
 				// Based on confirmedClient, we get into that if-else block right above.
 				if (confirmedClient.equalsIgnoreCase("s")) {
 
 					clientDAO.delete(selectedClient, manager);
+					manager.getTransaction().commit();
 					System.out.println("Cliente excluído com sucesso.");
 
 				} else {
@@ -119,6 +143,11 @@ public class ClientService {
 		catch( Exception e) {
 
 			System.out.println("Erro: " + e.getMessage());
+			manager.getTransaction().rollback();
+
+		} finally {
+
+			Database.closeConnection(manager);
 
 		}
 	}
@@ -141,7 +170,7 @@ public class ClientService {
 
 				for (int c = 0; c < clientList.size(); c++) {
 
-					System.out.println(clientList.get(c).getName() + " CPF: " + clientList.get(c).getCpf());
+					System.out.println(clientList.get(c).getName() + " ID: " + clientList.get(c).getId());
 
 				}
 
@@ -156,7 +185,6 @@ public class ClientService {
 
 				}
 
-				// Here's the point where we can change ONLY the name, cuz I had a brilliant idea of make Client.cpf his Id.
 				Client selectedClient = clientList.get(option -1);
 				String setNewClientName = input.stringInput("Deseja alterar o nome do Cliente em questao? Nome Atual" + selectedClient.getName());
 				if (setNewClientName.equalsIgnoreCase("n")) {

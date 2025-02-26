@@ -2,6 +2,7 @@
 import java.util.Scanner;
 
 import javax.persistence.EntityManager;
+import javax.xml.bind.annotation.XmlAnyAttribute;
 
 import DAO.ClientDAO;
 import DAO.BookDAO;
@@ -16,11 +17,14 @@ import Utils.Database;
 import Utils.Input;
 
 public class Main {
+
     public static void main(String[] args) {
+
     	Scanner scannerAtMain = new Scanner(System.in);
     	Input inputUtils = new Input(scannerAtMain);
-    	
+
     	var data = Database.openConnection();
+
    		BookDAO bookDAO  = new BookDAO(data);
    		ClientDAO clientDAO = new ClientDAO(data);
   	
@@ -29,12 +33,10 @@ public class Main {
     	SaleService saleService = new SaleService(inputUtils, clientDAO, bookDAO);
 
     	InputOutputInterface inputOutputInterface = new InputOutputInterface(clientService, bookService, saleService, inputUtils);
-   	
-    	 // Exibir Menu Principal
-       inputOutputInterface.InterfacePrinter();
-
+        inputOutputInterface.InterfacePrinter();
 
         scannerAtMain.close();
 
     }
+
 }

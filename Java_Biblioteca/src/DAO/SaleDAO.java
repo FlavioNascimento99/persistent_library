@@ -5,38 +5,38 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-import Entities.Client;
 import Entities.Sale;
-import Utils.Database;
 
 public class SaleDAO {
+
 	private EntityManager manager;
-	
-	public SaleDAO(){}
-	
-	// Just for run sometimes static method from Database through manager
-	public SaleDAO(EntityManager manager){}
-	
-	public void save(Sale sale) {
-		manager.persist(sale);
-		manager.getTransaction().commit();
-		manager.close();
+
+	public SaleDAO(EntityManager manager) {
+
+		this.manager = manager;
+
 	}
 
-	public List<Sale> listAll() {
+
+
+	public void save(Sale sale, EntityManager manager) {
+
+		manager.merge(sale);
+
+	}
+	public List<Sale> list() {
 		TypedQuery<Sale> saleQuery = manager.createQuery("select s from Sale s", Sale.class);
 		List<Sale> resultQuery = saleQuery.getResultList();
 		return resultQuery;
 	}
-	
-	public Sale searchById(int id) {
-		TypedQuery<Sale> saleQuery = manager.createQuery("select s from Sale s where s.id = :id", Sale.class);
+
+
+	public Sale search(int id) {
+		TypedQuery<Sale> saleQuery = manager.createQuery("SELECT s FROM Sale s WHERE s.id = :id", Sale.class);
 		saleQuery.setParameter("id", id);
 		return saleQuery.getSingleResult();
 	}
 
-// 	I don't remember how, when or why i've created this.
-	
 //	public List<Sale> listClient(Client client) {
 //		Query query = database.query();
 //		query.constrain(Sale.class);
@@ -44,11 +44,4 @@ public class SaleDAO {
 //		return query.execute();
 //	}
 
-	
-// 	I was completelly out of my mind creating this one, wtf is "delete Sale"? tax evasion? 
-	
-//	public void delete(Sale sale) {
-//		TypedQuery<Sale> saleQuery = manager.createQuery("select s from Sale s where s.id = :id", Sale.class);
-//		saleQuery.setParameter("id", Sale.id);
-//    }
 }

@@ -46,6 +46,19 @@ public class Input {
 			}
 		}
 	}
+
+
+	public Long longInput(String message) {
+		while(true){
+			try {
+				System.out.print(message);
+				return Long.parseLong(scanner.nextLine());
+			} catch (NumberFormatException e) {
+				System.out.println("Entrada inválida. Tente digitar um número Long (BIGINT)");
+
+			}
+		}
+	}
 	
 
 	public boolean booleanInput(String message) {

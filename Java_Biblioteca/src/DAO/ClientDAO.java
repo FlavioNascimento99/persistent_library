@@ -10,14 +10,12 @@ import Entities.Client;
 public class ClientDAO {
     private EntityManager manager;
 
-    // Constructors
     public ClientDAO(EntityManager manager) {this.manager = manager;}
-
 
 
     public void save(Client client, EntityManager manager) {
 
-        manager.persist(client);
+        manager.merge(client);
 
     }
 
@@ -30,10 +28,12 @@ public class ClientDAO {
     }
 
     public void delete(Client client, EntityManager manager) {
-
-        TypedQuery<Client> clientQuery = manager.createQuery("SELECT c FROM Client c WHERE c.cpf = :Client", Client.class);
-        clientQuery.setParameter("Client", client);
-        manager.remove(clientQuery);
+        client = manager.find(Client.class, client.getId());
+        if(client != null) {
+            manager.remove(client);
+        } else {
+            System.out.println("DAO: client not found");
+        }
 
     }
 
@@ -45,11 +45,10 @@ public class ClientDAO {
 
     }
 
-    // cpf as id 💀
-    public Client search(String cpf) {
+    public Client search(Integer clientId) {
 
-    	TypedQuery<Client> clientQuery = manager.createQuery("SELECT c FROM Client c WHERE c.cpf = :cpf", Client.class);
-    	clientQuery.setParameter("cpf", cpf);
+    	TypedQuery<Client> clientQuery = manager.createQuery("SELECT c FROM Client c WHERE c.id = :id", Client.class);
+    	clientQuery.setParameter("id", 1L);
     	return clientQuery.getSingleResult();
 
     }

@@ -4,6 +4,7 @@ import Services.ClientService;
 import Services.BookService;
 import Services.SaleService;
 
+import Utils.Database;
 import Utils.Input;
 
 public class InputOutputInterface {
@@ -30,14 +31,15 @@ public class InputOutputInterface {
 	        System.out.println("3. Livro.Busca");
 			System.out.println("4. Livro.Editar");
 			System.out.println("5. Livro.Excluir");
-	        System.out.println("4. Cliente.Cadastro");
-	        System.out.println("5. Cliente.Listagem");
-	        System.out.println("6. Cliente.Exclusão");
-	        System.out.println("7. Venda.Cadastrar");
-	        System.out.println("8. * Fechar *");
+	        System.out.println("6. Cliente.Cadastro");
+	        System.out.println("7. Cliente.Listagem");
+	        System.out.println("8. Cliente.Atualizar");
+	        System.out.println("9. Cliente.Excluir");
+			System.out.println("10. Venda.Cadastrar");
+			System.out.println("11. * Fechar *");
 	        
-	        int opcao = input.confirmMenuSelection("O que deseja: ", 1, 10);
-	        switch (opcao) {
+	        int option = input.confirmMenuSelection("O que deseja: ", 1, 11);
+	        switch (option) {
 	            case 1:
 	            	bookService.create();
 	                break;
@@ -59,15 +61,19 @@ public class InputOutputInterface {
 	            case 7:
 	                clientService.list();
 	                break;
-	            case 8:
+				case 8:
+					clientService.update();
+					break;
+	            case 9:
 	            	clientService.delete();
 	            	break;
-	            case 9:
-	                saleService.finallySale();
-	                break;
 	            case 10:
+	                saleService.processSale();
+	                break;
+	            case 11:
 	                System.out.println("Saindo do sistema...");
-	                return;
+					Database.shutdown();
+					return;
 	            default:
 	                System.out.println("Opção inválida. Tente novamente.");
 	        }

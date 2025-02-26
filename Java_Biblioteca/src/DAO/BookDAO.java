@@ -10,11 +10,9 @@ import Entities.Book;
 public class BookDAO {
 	private EntityManager manager;
 
-    // Constructor.
     public BookDAO(EntityManager manager) {
     	this.manager = manager;
     }
-
 
 
     public void save(Book book, EntityManager manager) {

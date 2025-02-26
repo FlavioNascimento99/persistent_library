@@ -1,12 +1,6 @@
 package Entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "items_sales")
@@ -18,24 +12,25 @@ public class ItemSale {
 	
 	@ManyToOne
 	@JoinColumn(name="sale_id", nullable=false)
-	private Sale sale;
+	private Sale sale = new Sale();
 	
 	@ManyToOne
 	@JoinColumn(name = "book_id", nullable = false)
     private Book book;
-    
+
+    @Column(nullable = false)
     private int quantity;
+
+    @Column(nullable = false)
     private double totalValue;
 
     // Constructors
     public ItemSale(){}
-    
 	public ItemSale(Book book, int quantity) {
 		this.book = book;
 		this.quantity = quantity;
 		this.totalValue = calculateTotalValue();
 	}
-	
 	
 	
 	// Getters
@@ -53,7 +48,6 @@ public class ItemSale {
     }
 
     
-    
     // Setters
     public void setBook(Book book) {
         this.book = book;
@@ -62,15 +56,18 @@ public class ItemSale {
     	this.quantity = quantity;
     	reCalculateTotalValue();
     }
-    
+    public void setSale(Sale sale) {
+
+        this.sale = sale;
+
+    }
+
+
     public double calculateTotalValue() {
     	return (book != null) ? book.getPrice() * quantity : 0 ;
     }
-    
     public void reCalculateTotalValue() {
 		this.totalValue = calculateTotalValue();
 	}
-    
-    
     
 }

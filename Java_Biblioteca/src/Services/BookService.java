@@ -67,9 +67,7 @@ public class BookService {
 	        Book book = new Book(title, author, price);
 
 	        bookDAO.save(book, manager);
-
 			manager.getTransaction().commit();
-
 	        System.out.println("Livro cadastrado com sucesso!\n");
 
 		}
@@ -87,7 +85,11 @@ public class BookService {
 
 		}
 
-		Database.closeConnection(manager);
+		finally {
+
+			Database.closeConnection(manager);
+
+		}
 
 	}
 
