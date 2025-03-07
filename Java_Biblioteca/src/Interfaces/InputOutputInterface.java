@@ -1,13 +1,20 @@
 package Interfaces;
 
+import DAO.SaleDAO;
 import Services.ClientService;
 import Services.BookService;
 import Services.SaleService;
 
 import Utils.Database;
 import Utils.Input;
+import org.apache.log4j.Logger;
+
+import javax.persistence.EntityManager;
 
 public class InputOutputInterface {
+	private static final Logger logger = Logger.getLogger(InputOutputInterface.class);
+
+
 	private ClientService clientService;
 	private BookService bookService;
 	private SaleService saleService;
@@ -36,9 +43,13 @@ public class InputOutputInterface {
 	        System.out.println("8. Cliente.Atualizar");
 	        System.out.println("9. Cliente.Excluir");
 			System.out.println("10. Venda.Cadastrar");
-			System.out.println("11. * Fechar *");
+			System.out.println("11 A - CONSULTA: Pesquisar Clientes com gasto Minimo");
+			System.out.println("12 B - CONSULTA: Pesquisar Vendas por periodo de tempo");
+			System.out.println("13 C - CONSULTA: Pesquisar Livros mais vendidos em unidades");
+
+			System.out.println("0. * Fechar *");
 	        
-	        int option = input.confirmMenuSelection("O que deseja: ", 1, 11);
+	        int option = input.confirmMenuSelection("O que deseja: ", 0, 11);
 	        switch (option) {
 	            case 1:
 	            	bookService.create();
@@ -70,7 +81,20 @@ public class InputOutputInterface {
 	            case 10:
 	                saleService.processSale();
 	                break;
-	            case 11:
+
+				// Primeira consulta do Sistema. HARD-CODED PARAMS 500.0
+				case 11:
+					clientService.getClientByMinimumSpent(500.0);
+					break;
+				case 12:
+					saleService.findSaleByDate();
+					break;
+				case 13:
+					bookService.mostSold();
+					break;
+
+				// Break-point.
+	            case 0:
 	                System.out.println("Saindo do sistema...");
 					Database.shutdown();
 					return;

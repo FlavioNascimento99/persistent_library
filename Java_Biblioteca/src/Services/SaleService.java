@@ -1,5 +1,6 @@
 package Services;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,19 +16,52 @@ import Entities.Sale;
 
 import Utils.Database;
 import Utils.Input;
+import org.apache.log4j.Logger;
 
 import javax.persistence.EntityManager;
+import javax.xml.crypto.Data;
 
 public class SaleService {
+	private static final Logger logger = Logger.getLogger(SaleService.class);
 	private final Input inputUtils;
 	private final BookDAO bookDAO;
 	private final ClientDAO clientDAO;
+	private SaleDAO saleDAO;
 	private EntityManager manager;
 
+
+	public SaleService(Input inputUtils, ClientDAO clientDAO, BookDAO bookDAO, SaleDAO saleDAO) {
+		this.inputUtils = inputUtils;
+		this.clientDAO = clientDAO;
+		this.bookDAO = bookDAO;
+		this.saleDAO = saleDAO;
+	}
 	public SaleService(Input inputUtils, ClientDAO clientDAO, BookDAO bookDAO) {
 		this.inputUtils = inputUtils;
 		this.clientDAO = clientDAO;
 		this.bookDAO = bookDAO;
+	}
+
+	public void findSaleByDate() {
+		manager = Database.openConnection();
+
+		int initialDay = inputUtils.integerInput("[INICIAL] Em que <DIA> foi feita a venda: ");
+		int initialMonth = inputUtils.integerInput("[INICIAL] Em que <MÊS> foi feita a venda: ");
+		int initialYear = inputUtils.integerInput("[INICIAL] Em que <ANO> foi feita a venda: ");
+		LocalDate start = LocalDate.of(initialYear, initialMonth, initialDay);
+
+		int finalDay = inputUtils.integerInput("[FINAL] Em que <DIA> foi feita a venda: ");
+		int finalMonth = inputUtils.integerInput("[FINAL] Em que <MÊS> foi feita a venda: ");
+		int finalYear = inputUtils.integerInput("[FINAL] Em que <ANO> foi feita a venda: ");
+		LocalDate end = LocalDate.of(finalYear, finalMonth, finalDay);
+
+
+		for (Sale sale: saleDAO.listByDate(start, end)){
+			System.out.println(sale.toString());
+		}
+
+		Database.closeConnection(manager);
+
 	}
 
 	public Sale processSale() {
@@ -107,14 +141,23 @@ public class SaleService {
 		try {
 
 			manager.getTransaction().begin();
-			Date saleDate = new Date();
+			// Solicita dados para o usuário
+			int saleDateDay = inputUtils.integerInput("Em que dia foi feita a venda: ");
+			int saleDateMonth = inputUtils.integerInput("Em que mês foi feita a venda: ");
+			int saleDateYear = inputUtils.integerInput("Em que ano foi feita a venda: ");
 
+			LocalDate saleDate = LocalDate.now();
 
-			// Cria a venda associando os itens e o cliente
+			try {
+				saleDate = LocalDate.of(saleDateYear, saleDateMonth, saleDateDay);
+			} catch (Exception e) {
+				saleDate = LocalDate.now();
+			}
+
+			System.out.println("Data da venda: " + saleDate);
+
 			Sale sale = new Sale(saleItems, selectedClient, saleDate);
 
-
-			// Para cada item, associa a venda (para preencher a FK sale_id)
 			for (ItemSale item : saleItems) {
 				item.setSale(sale);
 			}
@@ -136,15 +179,11 @@ public class SaleService {
 		}
 
 		catch (Exception e) {
-
 			manager.getTransaction().rollback();
 			System.out.println("Erro ao realizar venda: " + e.getMessage());
 			return null;
-
 		} finally {
-
 			Database.closeConnection(manager);
-
 		}
 	}
 

@@ -1,0 +1,151 @@
+02:24:48,914 DEBUG logging:38 - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+02:24:49,211  INFO LogHelper:31 - HHH000204: Processing PersistenceUnitInfo [name: hibernate-mysql]
+02:24:49,343  INFO Version:44 - HHH000412: Hibernate ORM core version 5.6.10.Final
+02:24:49,744 DEBUG RegionFactoryInitiator:118 - Cannot default RegionFactory based on registered strategies as `[]` RegionFactory strategies were registered
+02:24:49,746 DEBUG RegionFactoryInitiator:49 - Cache region factory : org.hibernate.cache.internal.NoCachingRegionFactory
+02:24:49,789  INFO Version:56 - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+02:24:50,220  WARN pooling:75 - HHH10001002: Using Hibernate built-in connection pool (not for production use!)
+02:24:50,235  INFO pooling:119 - HHH10001005: using driver [com.mysql.cj.jdbc.Driver] at URL [jdbc:mysql://localhost:3306/javadatabase?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true]
+02:24:50,236  INFO pooling:128 - HHH10001001: Connection properties: {password=****, user=root}
+02:24:50,236  INFO pooling:132 - HHH10001003: Autocommit mode: false
+02:24:50,243  INFO DriverManagerConnectionProviderImpl:322 - HHH000115: Hibernate connection pool size: 20 (min=1)
+02:24:50,650  INFO Dialect:175 - HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+02:24:52,175  INFO access:48 - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@63884e4] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+02:24:52,260 TRACE UniqueConstraintSchemaUpdateStrategy:50 - Interpreting UniqueConstraintSchemaUpdateStrategy from setting : null
+02:24:52,349  INFO JtaPlatformInitiator:52 - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+02:24:55,440 DEBUG SQL:144 - 
+    select
+        book0_.id as col_0_0_,
+        sum(itemsale1_.quantity) as col_1_0_,
+        book0_.id as id1_0_,
+        book0_.author as author2_0_,
+        book0_.price as price3_0_,
+        book0_.quantitySold as quantity4_0_,
+        book0_.title as title5_0_ 
+    from
+        books book0_ 
+    inner join
+        items_sales itemsale1_ 
+            on (
+                book0_.id=itemsale1_.book_id
+            ) 
+    group by
+        book0_.id 
+    order by
+        col_1_0_ DESC
+02:24:55,483 DEBUG SQL:144 - 
+    select
+        book0_.id as col_0_0_,
+        sum(itemsale1_.quantity) as col_1_0_,
+        book0_.id as id1_0_,
+        book0_.author as author2_0_,
+        book0_.price as price3_0_,
+        book0_.quantitySold as quantity4_0_,
+        book0_.title as title5_0_ 
+    from
+        books book0_ 
+    inner join
+        items_sales itemsale1_ 
+            on (
+                book0_.id=itemsale1_.book_id
+            ) 
+    group by
+        book0_.id 
+    order by
+        col_1_0_ DESC
+02:25:08,940  INFO BookService:62 - Iniciando módulo de cadastro de Livros...
+02:25:22,373 DEBUG SQL:144 - 
+    insert 
+    into
+        books
+        (author, price, quantitySold, title) 
+    values
+        (?, ?, ?, ?)
+02:25:25,536 DEBUG SQL:144 - 
+    select
+        client0_.id as id1_1_,
+        client0_.name as name2_1_ 
+    from
+        clients client0_
+02:25:27,368 DEBUG SQL:144 - 
+    select
+        book0_.id as id1_0_,
+        book0_.author as author2_0_,
+        book0_.price as price3_0_,
+        book0_.quantitySold as quantity4_0_,
+        book0_.title as title5_0_ 
+    from
+        books book0_
+02:25:43,610 DEBUG SQL:144 - 
+    select
+        client0_.id as id1_1_0_,
+        client0_.name as name2_1_0_ 
+    from
+        clients client0_ 
+    where
+        client0_.id=?
+02:25:43,617 DEBUG SQL:144 - 
+    insert 
+    into
+        sales
+        (client_id, dateSale, totalValue) 
+    values
+        (?, ?, ?)
+02:25:43,630 DEBUG SQL:144 - 
+    select
+        book0_.id as id1_0_0_,
+        book0_.author as author2_0_0_,
+        book0_.price as price3_0_0_,
+        book0_.quantitySold as quantity4_0_0_,
+        book0_.title as title5_0_0_ 
+    from
+        books book0_ 
+    where
+        book0_.id=?
+02:25:43,633 DEBUG SQL:144 - 
+    insert 
+    into
+        items_sales
+        (book_id, quantity, sale_id, totalValue) 
+    values
+        (?, ?, ?, ?)
+02:25:46,677 DEBUG SQL:144 - 
+    select
+        book0_.id as col_0_0_,
+        sum(itemsale1_.quantity) as col_1_0_,
+        book0_.id as id1_0_,
+        book0_.author as author2_0_,
+        book0_.price as price3_0_,
+        book0_.quantitySold as quantity4_0_,
+        book0_.title as title5_0_ 
+    from
+        books book0_ 
+    inner join
+        items_sales itemsale1_ 
+            on (
+                book0_.id=itemsale1_.book_id
+            ) 
+    group by
+        book0_.id 
+    order by
+        col_1_0_ DESC
+02:25:46,682 DEBUG SQL:144 - 
+    select
+        book0_.id as col_0_0_,
+        sum(itemsale1_.quantity) as col_1_0_,
+        book0_.id as id1_0_,
+        book0_.author as author2_0_,
+        book0_.price as price3_0_,
+        book0_.quantitySold as quantity4_0_,
+        book0_.title as title5_0_ 
+    from
+        books book0_ 
+    inner join
+        items_sales itemsale1_ 
+            on (
+                book0_.id=itemsale1_.book_id
+            ) 
+    group by
+        book0_.id 
+    order by
+        col_1_0_ DESC

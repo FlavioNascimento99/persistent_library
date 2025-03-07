@@ -5,11 +5,14 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import DAO.BookDAO;
+import DAO.SaleDAO;
 import Entities.Book;
 import Utils.Database;
 import Utils.Input;
+import org.apache.log4j.Logger;
 
 public class BookService {
+	private static final Logger logger = Logger.getLogger(BookService.class);
 	private final Input input;
 	private final BookDAO bookDAO;
 	private EntityManager manager;
@@ -32,7 +35,7 @@ public class BookService {
     public void list() {
 
         try {
-
+			logger.info("Inicializando busca de livros no Banco de Dados...");
             manager = Database.openConnection();
 
             System.out.println("\n--- Lista de Livros ---");
@@ -45,7 +48,8 @@ public class BookService {
 
         } finally {
 
-          Database.closeConnection(manager);
+
+          	Database.closeConnection(manager);
 
         }
 
@@ -54,6 +58,8 @@ public class BookService {
 	public void create() {
 
 		try {
+
+			logger.info("Iniciando módulo de cadastro de Livros...");
 
 			manager = Database.openConnection();
 			manager.getTransaction().begin();
@@ -295,5 +301,25 @@ public class BookService {
     	}
 
     }
+
+	public void mostSold() {
+		manager = Database.openConnection();
+		System.out.println("\n--- Livros mais vendidos ---");
+
+		if(bookDAO.bestSellers().isEmpty()){
+
+			System.out.println("Não foi encontrado nenhum titulo");
+
+		} else {
+
+			for (Book book : bookDAO.bestSellers()) {
+
+				System.out.println(book);
+
+			}
+
+		}
+
+	}
 
 }

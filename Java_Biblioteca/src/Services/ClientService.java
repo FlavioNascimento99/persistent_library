@@ -7,10 +7,13 @@ import javax.persistence.EntityManager;
 import DAO.ClientDAO;
 import Entities.Client;
 
+import Entities.Sale;
 import Utils.Database;
 import Utils.Input;
+import org.apache.log4j.Logger;
 
 public class ClientService {
+	private static final Logger logger = Logger.getLogger(ClientService.class);
 	private final Input input;
 	private final ClientDAO clientDAO;
 	private EntityManager manager;
@@ -21,14 +24,6 @@ public class ClientService {
 	}
 
 
-
-
-
-	/*
-	*
-	* 		CRUD Methods
-	*
-	*/
 	public void list() {
 		
 		try {
@@ -49,7 +44,6 @@ public class ClientService {
 
 		}
 	}
-
 	public void create() {
 
 		try {
@@ -89,7 +83,6 @@ public class ClientService {
 
 		}
 	}
-
 	public void delete() {
 
 		try {
@@ -151,7 +144,6 @@ public class ClientService {
 
 		}
 	}
-
 	public void update() {
 
 		manager = Database.openConnection();
@@ -168,7 +160,7 @@ public class ClientService {
 
 			} else {
 
-				for (int c = 0; c < clientList.size(); c++) {
+				for(int c = 0; c < clientList.size(); c++) {
 
 					System.out.println(clientList.get(c).getName() + " ID: " + clientList.get(c).getId());
 
@@ -218,6 +210,34 @@ public class ClientService {
 
 		}
 
+	}
+	public void getClientByMinimumSpent(double minimalSpent) {
+
+		try {
+			manager = Database.openConnection();
+
+			System.out.println("\n--- Listagem de Clientes que gastaram mais que 500.00 reais em compras ---");
+
+			for(Client client: clientDAO.findClientByMinimumSpent(minimalSpent)) {
+
+				System.out.println(client);
+
+			}
+		} finally {
+
+			Database.closeConnection(manager);
+
+		}
+	}
+	public Double getTotalSpentByClient(Integer clientId) {
+		Client client = clientDAO.search(clientId);
+		if (client == null) {
+			return 0.0;
+		}
+
+		return client.getSalesList().stream()
+				.mapToDouble(Sale::getTotalValue)
+				.sum();
 	}
 
 

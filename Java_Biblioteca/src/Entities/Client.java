@@ -18,7 +18,7 @@ public class Client {
 	
 	@OneToMany(mappedBy="client")
 	private List<Sale> salesList;
-	
+
 	public Client(String name) {
 		this.name = name;
 		this.salesList = new ArrayList<>();
@@ -52,7 +52,8 @@ public class Client {
     
     @Override
     public String toString() {
-        String salesString = (salesList == null || salesList.isEmpty()) ? "Nenhuma venda registrada." : salesList.toString();
-        return String.format("Nome: %s%n, CPF: %s%n Vendas: %s%n ", name, id, getSalesList());
+        return String.format("Nome: %s%n \n" +
+                "CPF: %s%n \n" +
+                "Vendas: %s%n ", name, id, getSalesList());
     }
 }

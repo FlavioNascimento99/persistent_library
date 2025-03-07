@@ -17,6 +17,7 @@ public class Book {
 	private String title;
 	private String author;
 	private double price;
+    private Long quantitySold;
 	
 	// Constructors
 	public Book(){}
@@ -64,7 +65,14 @@ public class Book {
     	return "Nome:  " + title + "\n" +
     		   "Autor: " + author +  "\n" + 
     		   "Preço: " + price +  "\n" +
-    		   "\n" +
-    		   "\n";
+    		   "Und. Vendidas: " + quantitySold + "\n";
+    }
+
+    public Long getQuantitySold() {
+        return quantitySold;
+    }
+
+    public void setQuantitySold(Long quantitySold) {
+        this.quantitySold = quantitySold;
     }
 }
