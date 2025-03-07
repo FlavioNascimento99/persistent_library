@@ -89,7 +89,6 @@ public class SaleService {
 		Client selectedClient = clientListing.get(clientSelection - 1);
 		Database.closeConnection(manager);
 
-		// 2. Seleciona os livros disponíveis
 		manager = Database.openConnection();
 		List<Book> booksListing = bookDAO.list();
 		if (booksListing.isEmpty()) {
@@ -107,7 +106,6 @@ public class SaleService {
 		Database.closeConnection(manager);
 
 
-		// 3. Adiciona itens à venda
 		List<ItemSale> saleItems = new ArrayList<>();
 		boolean addMoreBooks = true;
 		while (addMoreBooks) {
@@ -120,7 +118,6 @@ public class SaleService {
 			Book selectedBook = booksListing.get(bookIndex);
 
 
-			// Cria o item e ainda não associa a venda (será feito abaixo)
 			ItemSale item = new ItemSale(selectedBook, bookQuantity);
 			saleItems.add(item);
 			Boolean response = inputUtils.booleanInput("Deseja adicionar mais algum produto? (s/n)");

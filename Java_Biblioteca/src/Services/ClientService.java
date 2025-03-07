@@ -114,22 +114,16 @@ public class ClientService {
 					System.out.println("Opção fora de intervalo, tente novamente.");
 
 				}
-				// Selected <Client> from For-Loop
-				Client selectedClient = clientList.get(option -1);
 
+				Client selectedClient = clientList.get(option -1);
 				String confirmedClient = input.stringInput("Tem certeza de qe deseja excluir o cliente " + selectedClient.getName() + ", CPF: " + selectedClient.getId() + "(s/n): ");
 
-				// Based on confirmedClient, we get into that if-else block right above.
 				if (confirmedClient.equalsIgnoreCase("s")) {
-
 					clientDAO.delete(selectedClient, manager);
 					manager.getTransaction().commit();
 					System.out.println("Cliente excluído com sucesso.");
-
 				} else {
-
 					System.out.println("Operação cancelada.");
-
 				}
 			}
 		}
@@ -241,7 +235,6 @@ public class ClientService {
 	}
 
 
-	/// @TODO: Pelo amor de Deus, so falta isso pra gente ir pros demais services terminar essa parte do projeto.
 	public void search() {
 		manager = Database.openConnection();
 		System.out.println("\n--- Busca Clientes ---");

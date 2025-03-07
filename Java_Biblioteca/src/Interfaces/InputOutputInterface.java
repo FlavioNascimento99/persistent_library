@@ -51,6 +51,8 @@ public class InputOutputInterface {
 	        
 	        int option = input.confirmMenuSelection("O que deseja: ", 0, 11);
 	        switch (option) {
+
+				
 	            case 1:
 	            	bookService.create();
 	                break;
@@ -82,7 +84,9 @@ public class InputOutputInterface {
 	                saleService.processSale();
 	                break;
 
-				// Primeira consulta do Sistema. HARD-CODED PARAMS 500.0
+
+
+				// Consultas Personalizadas
 				case 11:
 					clientService.getClientByMinimumSpent(500.0);
 					break;
@@ -93,7 +97,9 @@ public class InputOutputInterface {
 					bookService.mostSold();
 					break;
 
-				// Break-point.
+
+
+				// Ponto de interrupção
 	            case 0:
 	                System.out.println("Saindo do sistema...");
 					Database.shutdown();

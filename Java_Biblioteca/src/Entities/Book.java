@@ -19,9 +19,7 @@ public class Book {
 	private double price;
     private Long quantitySold;
 	
-	// Constructors
 	public Book(){}
-	
 	public Book(String title, String author, Double price){
 		this.title = title;
 		this.author = author;
@@ -30,7 +28,6 @@ public class Book {
 	
 	
 	
-	// Getters
     public int getId() {
         return id;
     }
@@ -43,23 +40,31 @@ public class Book {
     public String getTitle() {
         return title;
     }
+    public Long getQuantitySold() {
+        return quantitySold;
+    }
 
-
+    
+    
+    
     public void setTitle(String title) {
         this.title = title;
     }
-    
     public void setAuthor(String author) {
         this.author = author;
     }
-    
     public void setPrice(double price) {
         if (price < 0) {
             throw new IllegalArgumentException("O preço não pode ser negativo.");
         }
         this.price = price;
     }
+    public void setQuantitySold(Long quantitySold) {
+        this.quantitySold = quantitySold;
+    }
     
+
+
     @Override
     public String toString() {
     	return "Nome:  " + title + "\n" +
@@ -68,11 +73,4 @@ public class Book {
     		   "Und. Vendidas: " + quantitySold + "\n";
     }
 
-    public Long getQuantitySold() {
-        return quantitySold;
-    }
-
-    public void setQuantitySold(Long quantitySold) {
-        this.quantitySold = quantitySold;
-    }
 }

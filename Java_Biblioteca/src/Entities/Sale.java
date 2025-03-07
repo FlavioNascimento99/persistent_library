@@ -30,14 +30,7 @@ public class Sale {
 
 
 
-
-	//******************************//
-	//								//
-	//			Constructor			//
-	//								//
-	//******************************//
 	public Sale(){}
-
 	public Sale(List<ItemSale> itemsSale, Client client, LocalDate dateSale) {
 		this.client = client;
 		this.dateSale = dateSale;
@@ -47,95 +40,54 @@ public class Sale {
 
 
 
-
-	//******************************//
-	//								//
-	//			Getters				//
-	//								//
-	//******************************//
     public Long getId() {
-
 		return id;
-
     }
-
-	public LocalDate getDateSale() {
-
-		return dateSale;
-
-	}
-
-    public Client getClient() {
-
-		return client;
-
-    }
-
     public void getItems() {
 		for (ItemSale items : itemsSale) {
 			System.out.println(items);
 		}
     }
-
+    public Client getClient() {
+		return client;
+    }
 	public double getTotalValue() {
-
 		return totalValue;
-
+	}
+	public LocalDate getDateSale() {
+		return dateSale;
 	}
 
 
 
-
-	//******************************//
-	//								//
-	//			Setters				//
-	//								//
-	//******************************//
-    public void setClient(Client client) {
-
-		this.client = client;
-
-	}
 
 	public void setId(Long id) {
-
 		this.id = id;
-
     }
-
-	public void setDateSale(LocalDate dateSale) {
-
-		this.dateSale = dateSale;
-
-	}
-
 	public void setItens(List<ItemSale> items) {
-
         this.itemsSale = items;
-
         calculateTotalSaleValue();
-
+	}
+    public void setClient(Client client) {
+		this.client = client;
+	}
+	public void setDateSale(LocalDate dateSale) {
+		this.dateSale = dateSale;
 	}
 
 
 
-
-
-	//******************************//
-	//								//
-	//			Utilitários			//
-	//								//
-	//******************************//
 	public void addItem(ItemSale item) {
 		this.itemsSale.add(item);
 		calculateTotalSaleValue();
 	}
-
     public double calculateTotalSaleValue() {
     	return totalValue = itemsSale.stream()
     			.mapToDouble(item -> item.calculateTotalValue())
     			.sum();
     }
+
+
 
 	@Override
 	public String toString() {

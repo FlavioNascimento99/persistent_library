@@ -24,7 +24,8 @@ public class ItemSale {
     @Column(nullable = false)
     private double totalValue;
 
-    // Constructors
+
+
     public ItemSale(){}
 	public ItemSale(Book book, int quantity) {
 		this.book = book;
@@ -33,7 +34,7 @@ public class ItemSale {
 	}
 	
 	
-	// Getters
+
     public int getId() {
         return id;
     }
@@ -48,7 +49,7 @@ public class ItemSale {
     }
 
     
-    // Setters
+
     public void setBook(Book book) {
         this.book = book;
     }
@@ -57,10 +58,9 @@ public class ItemSale {
     	reCalculateTotalValue();
     }
     public void setSale(Sale sale) {
-
         this.sale = sale;
-
     }
+
 
 
     public double calculateTotalValue() {
