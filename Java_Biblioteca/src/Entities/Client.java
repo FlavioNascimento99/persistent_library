@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 
 @Entity
-@Table(name = "clients")
+@Table(name = "clients20192370034")
 public class Client {
 
 	@Id
@@ -15,6 +15,9 @@ public class Client {
 
     @Column(nullable = false)
 	private String name;
+
+    @Column(nullable = false)
+    private String cpf;
 	
     @OneToMany(mappedBy="client")
 	private List<Sale> salesList;
@@ -22,8 +25,9 @@ public class Client {
 
 
 	public Client() {}
-	public Client(String name) {
+	public Client(String name, String cpf) {
 		this.name = name;
+        this.cpf = cpf;
 		this.salesList = new ArrayList<>();
 	}
 	
@@ -35,6 +39,7 @@ public class Client {
     public String getName() {
         return name;
     }
+    public String getCpf(){ return cpf; }
     public List<Sale> getSalesList() {
         return salesList;
     }
@@ -44,7 +49,7 @@ public class Client {
     public void setName(String name) {
         this.name = name;
     }
-
+    public void setCpf(String cpf) {this.cpf = cpf;}
 
 
     public void addSale(Sale sale) {
@@ -57,7 +62,7 @@ public class Client {
     public String toString() {
         return String.format("Nome: %s%n " +
                 "CPF: %s%n " +
-                "Vendas: %s%n ", name, id, getSalesList());
+                "Vendas: %s%n ", name, cpf, getSalesList());
     }
 
 }

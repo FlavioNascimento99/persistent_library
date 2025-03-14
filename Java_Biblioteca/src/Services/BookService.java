@@ -5,7 +5,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import DAO.BookDAO;
-import DAO.SaleDAO;
 import Entities.Book;
 import Utils.Database;
 import Utils.Input;
@@ -20,66 +19,72 @@ public class BookService {
 
 
 	// Constructor Default
-	public BookService(BookDAO bookDAO, Input input) {
+	public BookService(EntityManager manager, Input input) {
 		this.input = input;
-		this.bookDAO = bookDAO;
+		this.manager = manager;
+		this.bookDAO = new BookDAO(manager);
 	}
 
 
-
-
-	// Método de listagem de Livros
-    public void list() {
+	public void list() {
         try {
 			logger.info("Inicializando busca de livros no Banco de Dados...");
-            manager = Database.openConnection();
+			Database.beginTransaction(manager);
             System.out.println("\n--- Lista de Livros ---");
-            for (Book book : bookDAO.list()) {
+
+			for (Book book : bookDAO.list()) {
                 System.out.println(book);
             }
-        } finally {
-          	Database.closeConnection(manager);
-        }
+
+        } catch(Exception e) {
+			System.out.println(e.getMessage());
+			Database.rollbackTransaction(manager);
+		}
     }
 
 
-
-	// Método de criação de Livros
+	//==================================================================//
+	//																	//
+	//			  Regras de Negócio para cadastro de Livro.				//
+	//																	//
+	//==================================================================//
 	public void create() {
 		try {
 			logger.info("Iniciando módulo de cadastro de Livros...");
+			Database.beginTransaction(manager);
 
-			manager = Database.openConnection();
-			manager.getTransaction().begin();
-			
 			System.out.println("\n--- Cadastro de Livro ---");
-			
 			String title = input.stringInput("Titulo: ");
-	        String author = input.stringInput("Autor: ");
-	        Double price = input.doubleInput("Valor do Produto: ");
 
-	        Book book = new Book(title, author, price);
+			System.out.println("Manager from Service:" + manager);
+			String author = input.stringInput("Autor: ");
+			Double price = input.doubleInput("Valor do Produto: ");
+			String isbn = input.stringInput("ISBN: ");
 
-	        bookDAO.save(book, manager);
-			manager.getTransaction().commit();
-	        System.out.println("Livro cadastrado com sucesso!\n");
-
-		} catch(Exception e) {
-			if (manager.getTransaction().isActive()) {
-				manager.getTransaction().rollback();
+			if (bookDAO.isFieldExists("isbn", isbn)) {
+				System.out.println("Código do livro já se encontra cadastrado.");
+				return;
 			}
+
+			Book book = new Book(title, author, price, isbn);
+
+			bookDAO.save(book);
+			Database.commitTransaction(manager);  // Commit da transação
+
+			System.out.println("Livro cadastrado com sucesso!\n");
+
+		} catch (Exception e) {
+			Database.rollbackTransaction(manager);  // Rollback da transação em caso de erro
 			System.out.println(e.getMessage());
-		} finally {
-			Database.closeConnection(manager);
 		}
 	}
 
 
 
+
 	// Método de exclusão de Livros
 	public void delete() {
-		manager = Database.openConnection();
-		manager.getTransaction().begin();
+		Database.beginTransaction(manager);
 
 		System.out.println("\n--- Exclui do livro ---");
 		List<Book>bookList = bookDAO.list();
@@ -91,8 +96,8 @@ public class BookService {
 				for (int d = 0; d < bookList.size(); d++) {
 					System.out.println((d + 1) + ". " + bookList.get(d).getTitle());
 				}
-				int option;
-				option = input.integerInput("Selecione um livro: ");
+
+				int option = input.integerInput("Selecione um livro: ");
 				if(option < 1 || option > bookList.size()) {
 					System.out.println("Opcao fora de intervalo, tente novamente.");
 					return;
@@ -101,9 +106,8 @@ public class BookService {
 				Book selectedBook = bookList.get(option - 1);
 				String confirmation = input.stringInput("Voce deseja remover " + selectedBook.getTitle() + " (s/n)? ");
 				if (confirmation.equalsIgnoreCase("s")) {
-					Book managedBook = manager.merge(selectedBook);
-					bookDAO.delete(managedBook, manager);
-					manager.getTransaction().commit();
+					bookDAO.delete(selectedBook);
+					Database.commitTransaction(manager);
 					System.out.println("Livro removido com sucesso!\n");
 				} else {
 					System.out.println("Operacao cancelada");
@@ -111,9 +115,7 @@ public class BookService {
 			}
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
-			manager.getTransaction().rollback();
-		} finally {
-			Database.closeConnection(manager);
+			Database.rollbackTransaction(manager);
 		}
 
 	}
@@ -122,8 +124,7 @@ public class BookService {
 	
 	// Método de edição de livros 
 	public void update() {
-		manager = Database.openConnection();
-		manager.getTransaction().begin();
+		Database.beginTransaction(manager);
 
 		System.out.println("\n--- Editar Livro ---");
 		List<Book> bookList = bookDAO.list();
@@ -144,39 +145,47 @@ public class BookService {
 					return;
 				}
 
+
 				Book selectedBook = bookList.get(option - 1);
-				String setNewName = input.stringInput("Deseja alterar o titulo do livro [pressione N para manter o atual]? Titulo atual: " + selectedBook.getTitle());
+				String setNewName = input.stringInput("[ALTERAR - pressione N e valor será mantido] Titulo(Atual): " + selectedBook.getTitle());
 
 				if (setNewName.equals("n")  ||  setNewName.equals("N")) {
-					System.out.println("Operacao cancelada, titulo sera mantido.");
+					System.out.println("Sem alteração");
 				} else {
 					selectedBook.setTitle(setNewName);
 					System.out.println("Titulo atual: " + selectedBook.getTitle());
-					bookDAO.update(selectedBook, manager);
+					bookDAO.update(selectedBook);
 				}
 
-				String setNewAuthor = input.stringInput("Deseja alterar o autor do livro [pressione N para manter o atual]? Autor atual: " + selectedBook.getAuthor());
+				String setNewAuthor = input.stringInput("[ALTERAR - Pressione N e o valor será mantido] Autor(Atual): " + selectedBook.getAuthor());
 				if (setNewAuthor.equals("n")  ||  setNewAuthor.equals("N")) {
-					System.out.println("Operacao cancelada, autor sera mantido.");
+					System.out.println("Sem alteração.");
 				} else {
 					selectedBook.setAuthor(setNewAuthor);
-					bookDAO.update(selectedBook, manager);
+					bookDAO.update(selectedBook);
 				}
 
-				double setNewPrice = input.doubleInput("Deseja alterar o valor unitario do livro [Mantenha vazio para manter valor]? Valor atual: " + selectedBook.getPrice());
+				String setNewISBN = input.stringInput("[ALTERAR - Pressione N e o valor será mantido] ISBN(Atual): " + selectedBook.getIsbn());
+				if (setNewISBN.equals("n")  ||  setNewISBN.equals("N")) {
+					System.out.println("Sem alteração.");
+				} else {
+					selectedBook.setIsbn(setNewISBN);
+					bookDAO.update(selectedBook);
+				}
+
+				double setNewPrice = input.doubleInput("[ALTERAR - pressione 0 e o valor será mantido] Valor(Atual): " + selectedBook.getPrice());
 				if (setNewPrice == 0.0) {
-					System.out.println("Operacao cancelada, valor sera mantido.");
+					System.out.println("Sem alteração.");
 				} else {
 					selectedBook.setPrice(setNewPrice);
-					bookDAO.update(selectedBook, manager);
+					bookDAO.update(selectedBook);
 				}
+
+				Database.commitTransaction(manager);
 			}
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
-			manager.getTransaction().rollback();
-		} finally {
-			manager.getTransaction().commit();
-			Database.closeConnection(manager);
+			Database.rollbackTransaction(manager);
 		}
 	}
 
@@ -185,21 +194,21 @@ public class BookService {
 	// Método de busca de livros
 	public void search() {
     	try {
-        	manager = Database.openConnection();
         	System.out.println("\n--- Buscar Livro por Título ---");
-
         	String title = input.stringInput("Digite um nome que componha o título do livro: ");
         	List<Book> result = bookDAO.search(title);
-        	if(result.isEmpty()){
+
+			if(result.isEmpty()){
         		System.out.println("Não foi encontrado nenhum titulo");
         	} else {
         		for (Book book : result) {
         			System.out.println("Resultado da busca: " + book);
         		}
         	}
+
         } catch (Exception e) {
-    		manager.getTransaction().rollback();
-    		System.out.println(e.getMessage());
+			System.out.println(e.getMessage());
+    		Database.rollbackTransaction(manager);
     	}
     }
 
@@ -207,13 +216,23 @@ public class BookService {
 
 	// Listagem de livros mais vendidos.
 	public void mostSold() {
-		manager = Database.openConnection();
 		System.out.println("\n--- Livros mais vendidos ---");
 		if(bookDAO.bestSellers().isEmpty()){
 			System.out.println("Não foi encontrado nenhum titulo");
 		} else {
 			for (Book book : bookDAO.bestSellers()) {
-				System.out.println(book);
+				if (book.getIsbn() == null || book.getIsbn().isEmpty()) {
+					System.out.println(
+							book.getTitle() + "\n" +
+							book.getAuthor() + "\n" +
+							"Livro sem ISBN válido" + "\n" +
+							book.getPrice() + "\n" +
+							book.getQuantitySold());
+					System.out.println("\n");
+				} else {
+					System.out.println(book);
+					System.out.println("\n");
+				}
 			}
 		}
 	}

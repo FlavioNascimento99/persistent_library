@@ -19,31 +19,26 @@ import Utils.Input;
 import org.apache.log4j.Logger;
 
 import javax.persistence.EntityManager;
-import javax.xml.crypto.Data;
 
 public class SaleService {
 	private static final Logger logger = Logger.getLogger(SaleService.class);
 	private final Input inputUtils;
 	private final BookDAO bookDAO;
 	private final ClientDAO clientDAO;
-	private SaleDAO saleDAO;
+	private final SaleDAO saleDAO;
 	private EntityManager manager;
 
 
-	public SaleService(Input inputUtils, ClientDAO clientDAO, BookDAO bookDAO, SaleDAO saleDAO) {
+	public SaleService(Input inputUtils, ClientDAO clientDAO, BookDAO bookDAO, EntityManager manager) {
+		this.manager = manager;
 		this.inputUtils = inputUtils;
 		this.clientDAO = clientDAO;
 		this.bookDAO = bookDAO;
-		this.saleDAO = saleDAO;
-	}
-	public SaleService(Input inputUtils, ClientDAO clientDAO, BookDAO bookDAO) {
-		this.inputUtils = inputUtils;
-		this.clientDAO = clientDAO;
-		this.bookDAO = bookDAO;
+		this.saleDAO = new SaleDAO(manager);
 	}
 
 	public void findSaleByDate() {
-		manager = Database.openConnection();
+		Database.beginTransaction(manager);
 
 		int initialDay = inputUtils.integerInput("[INICIAL] Em que <DIA> foi feita a venda: ");
 		int initialMonth = inputUtils.integerInput("[INICIAL] Em que <MÊS> foi feita a venda: ");
@@ -59,41 +54,35 @@ public class SaleService {
 		for (Sale sale: saleDAO.listByDate(start, end)){
 			System.out.println(sale.toString());
 		}
-
-		Database.closeConnection(manager);
-
+		Database.commitTransaction(manager);
 	}
 
 	public Sale processSale() {
 
-		manager = Database.openConnection();
+		Database.beginTransaction(manager);
 		List<Client> clientListing = clientDAO.list();
+
 		if (clientListing.isEmpty()) {
 			System.out.println("Não foi encontrado nenhum cliente registrado.");
-			Database.closeConnection(manager);
 			return null;
 		}
+
 		System.out.println("\n--- Clientes Disponíveis ---");
 		for (int i = 0; i < clientListing.size(); i++) {
 			System.out.println((i + 1) + ". " + clientListing.get(i).getName()
 					+ " (Id: " + clientListing.get(i).getId() + ")");
 		}
+
 		int clientSelection = inputUtils.integerInput("Selecione o cliente que deseja efetuar venda: ");
 		if (clientSelection < 1 || clientSelection > clientListing.size()) {
 			System.out.println("Número passado excede a quantidade existente em listagem.");
-			Database.closeConnection(manager);
 			return null;
 		}
 
-
 		Client selectedClient = clientListing.get(clientSelection - 1);
-		Database.closeConnection(manager);
-
-		manager = Database.openConnection();
 		List<Book> booksListing = bookDAO.list();
 		if (booksListing.isEmpty()) {
 			System.out.println("Não há livros cadastrados para realizar a venda.");
-			Database.closeConnection(manager);
 			return null;
 		}
 
@@ -103,8 +92,6 @@ public class SaleService {
 			System.out.println((i + 1) + ". " + booksListing.get(i).getTitle()
 					+ " - Preço: R$ " + booksListing.get(i).getPrice());
 		}
-		Database.closeConnection(manager);
-
 
 		List<ItemSale> saleItems = new ArrayList<>();
 		boolean addMoreBooks = true;
@@ -117,10 +104,9 @@ public class SaleService {
 			int bookQuantity = inputUtils.integerInput("Quantos exemplares você deseja adquirir? ");
 			Book selectedBook = booksListing.get(bookIndex);
 
-
 			ItemSale item = new ItemSale(selectedBook, bookQuantity);
 			saleItems.add(item);
-			Boolean response = inputUtils.booleanInput("Deseja adicionar mais algum produto? (s/n)");
+			boolean response = inputUtils.booleanInput("Deseja adicionar mais algum produto? (s/n)");
 			if (!response) {
 				addMoreBooks = false;
 			}
@@ -132,29 +118,21 @@ public class SaleService {
 		}
 
 
-		// 4. Confirma e persiste a venda com seus itens
-		manager = Database.openConnection();
-
 		try {
-
-			manager.getTransaction().begin();
 			// Solicita dados para o usuário
 			int saleDateDay = inputUtils.integerInput("Em que dia foi feita a venda: ");
 			int saleDateMonth = inputUtils.integerInput("Em que mês foi feita a venda: ");
 			int saleDateYear = inputUtils.integerInput("Em que ano foi feita a venda: ");
 
 			LocalDate saleDate = LocalDate.now();
-
 			try {
 				saleDate = LocalDate.of(saleDateYear, saleDateMonth, saleDateDay);
 			} catch (Exception e) {
 				saleDate = LocalDate.now();
 			}
-
 			System.out.println("Data da venda: " + saleDate);
 
 			Sale sale = new Sale(saleItems, selectedClient, saleDate);
-
 			for (ItemSale item : saleItems) {
 				item.setSale(sale);
 			}
@@ -165,22 +143,17 @@ public class SaleService {
 			System.out.println("Venda efetivada com sucesso - Total da venda: R$ "
 					+ sale.calculateTotalSaleValue());
 
-			SaleDAO saleDAO = new SaleDAO(manager);
-			saleDAO.save(sale, manager);
+			saleDAO.save(sale);
+			Database.commitTransaction(manager);
 
-			manager.getTransaction().commit();
 			System.out.println("Venda realizada com sucesso.");
-
 			return sale;
+		} catch (Exception e) {
 
-		}
-
-		catch (Exception e) {
-			manager.getTransaction().rollback();
+			Database.rollbackTransaction(manager);
 			System.out.println("Erro ao realizar venda: " + e.getMessage());
 			return null;
-		} finally {
-			Database.closeConnection(manager);
+
 		}
 	}
 

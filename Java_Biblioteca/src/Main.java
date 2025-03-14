@@ -1,6 +1,7 @@
 
 import java.util.Scanner;
 
+import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.xml.bind.annotation.XmlAnyAttribute;
 
@@ -27,19 +28,25 @@ public class Main {
     	Scanner scannerAtMain = new Scanner(System.in);
     	Input inputUtils = new Input(scannerAtMain);
 
-    	var data = Database.openConnection();
+		// Abrindo conexão única 😈
+		EntityManager manager = Database.getEntityManager();
 
-   		BookDAO bookDAO  = new BookDAO(data);
-   		ClientDAO clientDAO = new ClientDAO(data);
-		SaleDAO saleDAO = new SaleDAO(data);
-  	
-    	BookService bookService = new BookService(bookDAO, inputUtils);
-    	ClientService clientService = new ClientService(clientDAO, inputUtils);
-    	SaleService saleService = new SaleService(inputUtils, clientDAO, bookDAO, saleDAO);
+   		BookDAO bookDAO  = new BookDAO(manager);
+   		ClientDAO clientDAO = new ClientDAO(manager);
+//		SaleDAO saleDAO = new SaleDAO(manager);
 
+    	BookService bookService = new BookService(manager, inputUtils);
+		ClientService clientService = new ClientService(manager, inputUtils);
+		SaleService saleService = new SaleService(inputUtils, clientDAO, bookDAO, manager);
+
+
+		// Inicializador de Interface no CLI
     	InputOutputInterface inputOutputInterface = new InputOutputInterface(clientService, bookService, saleService, inputUtils);
         inputOutputInterface.InterfacePrinter();
 
+
+
+		// Finalizar Scanner do Java API
         scannerAtMain.close();
 
     }

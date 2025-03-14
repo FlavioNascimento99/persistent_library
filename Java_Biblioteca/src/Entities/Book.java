@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "books")
+@Table(name = "books20192370034")
 public class Book {
 	
 	@Id
@@ -16,14 +16,16 @@ public class Book {
 	
 	private String title;
 	private String author;
-	private double price;
+    private String isbn;
     private Long quantitySold;
-	
+    private double price;
+
 	public Book(){}
-	public Book(String title, String author, Double price){
+	public Book(String title, String author, Double price, String isbn){
 		this.title = title;
 		this.author = author;
 		this.price = price;
+        this.isbn = isbn;
 	}
 	
 	
@@ -40,6 +42,7 @@ public class Book {
     public String getTitle() {
         return title;
     }
+    public String getIsbn(){return isbn;}
     public Long getQuantitySold() {
         return quantitySold;
     }
@@ -62,13 +65,25 @@ public class Book {
     public void setQuantitySold(Long quantitySold) {
         this.quantitySold = quantitySold;
     }
-    
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
 
 
+    public static String formatISBN(String isbn) {
+        return String.format("[ISBN-13]: %s-%s-%s-%s-%s",
+                isbn.substring(0, 3),
+                isbn.substring(3, 5),
+                isbn.substring(5, 8),
+                isbn.substring(8, 12),
+                isbn.substring(12)
+        );
+    }
     @Override
     public String toString() {
     	return "Nome:  " + title + "\n" +
-    		   "Autor: " + author +  "\n" + 
+    		   "Autor: " + author +  "\n" +
+               "ISBN: " + formatISBN(getIsbn()) + "\n" +
     		   "Preço: " + price +  "\n" +
     		   "Und. Vendidas: " + quantitySold + "\n";
     }

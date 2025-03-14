@@ -1,12 +1,11 @@
 package Services;
 
 import java.util.List;
-
 import javax.persistence.EntityManager;
+import javax.xml.crypto.Data;
 
 import DAO.ClientDAO;
 import Entities.Client;
-
 import Entities.Sale;
 import Utils.Database;
 import Utils.Input;
@@ -17,226 +16,165 @@ public class ClientService {
 	private final Input input;
 	private final ClientDAO clientDAO;
 	private EntityManager manager;
-	
-	public ClientService(ClientDAO clientDAO, Input input) {
-		this.clientDAO = clientDAO;
+
+	public ClientService(EntityManager manager, Input input) {
+		this.manager = manager;
+		this.clientDAO = new ClientDAO(manager);
 		this.input = input;
 	}
 
-
 	public void list() {
-		
 		try {
-
-			manager = Database.openConnection();
-
+			Database.beginTransaction(manager);
 			System.out.println("\n--- Lista de Clientes ---");
-
 			for (Client client : clientDAO.list()) {
-
 				System.out.println(client);
-
 			}
-
-		} finally {
-			
-			Database.closeConnection(manager);
-
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			Database.rollbackTransaction(manager);
 		}
 	}
+
 	public void create() {
-
 		try {
-			manager = Database.openConnection();
-			manager.getTransaction().begin();
 
+			Database.beginTransaction(manager);
+
+			// Business Rules 💼
 			System.out.println("\n--- Cadastro de Cliente ---");
 
 			String name = input.stringInput("Name: ");
+			String cpf = input.stringInput("CPF: ");
 
-
-			Client client = new Client(name);
-
-			clientDAO.save(client, manager);
-			manager.getTransaction().commit();
-			System.out.println("Cliente cadastrado com sucesso!\n");
-
-		}
-
-
-		catch(Exception e) {
-
-			System.out.println("Erro: " + e.getMessage());
-
-			if (manager.getTransaction().isActive()) {
-
-				manager.getTransaction().rollback();
-
+			if(clientDAO.isFieldExists("cpf", cpf)) {
+				System.out.println("Este ISBN já foi cadastrado.");
+				return;
 			}
 
-		}
+			Client client = new Client(name, cpf);
 
-		finally {
+			clientDAO.save(client);
+			Database.commitTransaction(manager);
 
-			System.out.println("\nClientes cadastrados com sucesso!\n");
-			Database.closeConnection(manager);
-
-		}
-	}
-	public void delete() {
-
-		try {
-
-			manager = Database.openConnection();
-			manager.getTransaction().begin();
-
-			System.out.println("\n--- Realizar Exclusão - Clientes ---");
-
-			List<Client> clientList = clientDAO.list();
-
-			if (clientList.isEmpty()) {
-
-				System.out.println("Não há clientes cadastrados.");
-
-			} else {
-
-				for( int i=0;i < clientList.size(); i++) {
-
-					System.out.println((i + 1) +". " + clientList.get(i).getName() + " ID: " + clientList.get(i).getId());
-
-				}
-
-				int option;
-
-				option = input.integerInput("Qual opcao deseja deletar: ");
-				if (option < 1 || option > clientList.size()) {
-
-					System.out.println("Opção fora de intervalo, tente novamente.");
-
-				}
-
-				Client selectedClient = clientList.get(option -1);
-				String confirmedClient = input.stringInput("Tem certeza de qe deseja excluir o cliente " + selectedClient.getName() + ", CPF: " + selectedClient.getId() + "(s/n): ");
-
-				if (confirmedClient.equalsIgnoreCase("s")) {
-					clientDAO.delete(selectedClient, manager);
-					manager.getTransaction().commit();
-					System.out.println("Cliente excluído com sucesso.");
-				} else {
-					System.out.println("Operação cancelada.");
-				}
-			}
-		}
-		catch( Exception e) {
-
+		} catch (Exception e) {
 			System.out.println("Erro: " + e.getMessage());
-			manager.getTransaction().rollback();
-
-		} finally {
-
-			Database.closeConnection(manager);
-
+			Database.rollbackTransaction(manager);
 		}
 	}
+
+//	public void delete() {
+//		Database.beginTransaction(manager);
+//
+//		System.out.println("\n--- Realizar Exclusão - Clientes ---" + manager);
+//		List<Client>clientList = clientDAO.list();
+//
+//		try {
+//			if (clientList.isEmpty()) {
+//				System.out.println("Não há clientes cadastrados.");
+//			} else {
+//				for (int i = 0; i < clientList.size(); i++) {
+//					System.out.println((i + 1) + ". " + clientList.get(i).getName() + " CPF: " + clientList.get(i).getCpf());
+//				}
+//
+//				int option = input.integerInput("Qual opcao deseja deletar: ");
+//				if (option < 1 || option > clientList.size()) {
+//					System.out.println("Opção fora de intervalo, tente novamente.");
+//					return;
+//				}
+//
+//				Client selectedClient = clientList.get(option - 1);
+//				String confirmedClient = input.stringInput("Excluir cliente " + selectedClient.getName() + ", CPF: " + selectedClient.getCpf() + "(s/n): ");
+//				if (confirmedClient.equalsIgnoreCase("s")) {
+//					clientDAO.delete(selectedClient);
+//					Database.commitTransaction(manager);
+//					System.out.println("Cliente excluído com sucesso.");
+//				} else {
+//					System.out.println("Operacao cancelada");
+//				}
+//
+//			}
+//		} catch (Exception e) {
+//
+//			System.out.println("Erro: " + e.getMessage());
+//			Database.rollbackTransaction(manager);
+//
+//		}
+//	}
+
 	public void update() {
-
-		manager = Database.openConnection();
-		manager.getTransaction().begin();
-
+		Database.beginTransaction(manager);
 		System.out.println("\n --- Editar Cliente ---");
 		List<Client> clientList = clientDAO.list();
 
 		try {
 
-			if(clientList.isEmpty()) {
-
+			if (clientList.isEmpty()) {
 				System.out.println("Nao existe cliente cadastrado.");
-
 			} else {
 
 				for(int c = 0; c < clientList.size(); c++) {
-
 					System.out.println(clientList.get(c).getName() + " ID: " + clientList.get(c).getId());
-
 				}
 
-				int option;
-
-				option = input.integerInput("Selecione um Cliente: ");
-
+				int option = input.integerInput("Selecione um Cliente: ");
 				if (option < 1 || option > clientList.size()) {
-
 					System.out.println("Opcao fora do intervalo, tente novamente.");
 					return;
-
 				}
+				Client selectedClient = clientList.get(option - 1);
 
-				Client selectedClient = clientList.get(option -1);
-				String setNewClientName = input.stringInput("Deseja alterar o nome do Cliente em questao? Nome Atual" + selectedClient.getName());
+				String setNewClientName = input.stringInput("[ALTERAR - pressione N e o valor será mantido] Nome(Atual): " + selectedClient.getName());
 				if (setNewClientName.equalsIgnoreCase("n")) {
-
 					System.out.println("Operacao cancelada, nome sera mantido.");
-
 				} else {
 					selectedClient.setName(setNewClientName);
 					System.out.println("Cliente alterado com sucesso.");
-
-					clientDAO.update(selectedClient, manager);
+					clientDAO.update(selectedClient);
 				}
 
+				String setNewClientCpf = input.stringInput("[ALTERAR - pressione N e o valor será mantido] CPF(Atual): " + selectedClient.getCpf());
+				if (setNewClientCpf.equalsIgnoreCase("n")) {
+					System.out.println("Operacao cancelada, nome sera mantido.");
+				} else {
+					selectedClient.setCpf(setNewClientCpf);
+					System.out.println("Cliente alterado com sucesso.");
+					clientDAO.update(selectedClient);
+				}
+
+				Database.commitTransaction(manager);
+
 			}
-
-		}
-
-		catch (Exception e) {
+		} catch (Exception e) {
 
 			System.out.println("Erro: " + e.getMessage());
-
-			manager.getTransaction().rollback();
-
-		}
-
-		finally {
-
-			manager.getTransaction().commit();
-
-			Database.closeConnection(manager);
+			Database.rollbackTransaction(manager);
 
 		}
-
 	}
+
 	public void getClientByMinimumSpent(double minimalSpent) {
-
 		try {
-			manager = Database.openConnection();
 
+			Database.beginTransaction(manager);
 			System.out.println("\n--- Listagem de Clientes que gastaram mais que 500.00 reais em compras ---");
 
-			for(Client client: clientDAO.findClientByMinimumSpent(minimalSpent)) {
-
+			for (Client client : clientDAO.findClientByMinimumSpent(minimalSpent)) {
 				System.out.println(client);
-
 			}
-		} finally {
-
-			Database.closeConnection(manager);
-
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			Database.rollbackTransaction(manager);
 		}
 	}
+
 	public Double getTotalSpentByClient(Integer clientId) {
 		Client client = clientDAO.search(clientId);
 		if (client == null) {
 			return 0.0;
 		}
-
 		return client.getSalesList().stream()
 				.mapToDouble(Sale::getTotalValue)
 				.sum();
-	}
-
-
-	public void search() {
-		manager = Database.openConnection();
-		System.out.println("\n--- Busca Clientes ---");
 	}
 }

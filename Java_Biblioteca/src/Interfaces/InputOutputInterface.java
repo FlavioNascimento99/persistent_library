@@ -40,19 +40,20 @@ public class InputOutputInterface {
 			System.out.println("5. Livro.Excluir");
 	        System.out.println("6. Cliente.Cadastro");
 	        System.out.println("7. Cliente.Listagem");
-	        System.out.println("8. Cliente.Atualizar");
-	        System.out.println("9. Cliente.Excluir");
-			System.out.println("10. Venda.Cadastrar");
-			System.out.println("11 A - CONSULTA: Pesquisar Clientes com gasto Minimo");
-			System.out.println("12 B - CONSULTA: Pesquisar Vendas por periodo de tempo");
-			System.out.println("13 C - CONSULTA: Pesquisar Livros mais vendidos em unidades");
+	        System.out.println("8. Cliente.Editar");
+			System.out.println("9. Venda.Cadastrar");
+			System.out.println("10 A - CONSULTA: Pesquisar Clientes com gasto Minimo");
+			System.out.println("11 B - CONSULTA: Pesquisar Vendas por periodo de tempo");
+			System.out.println("12 C - CONSULTA: Pesquisar Livros mais vendidos em unidades");
 
 			System.out.println("0. * Fechar *");
 	        
 	        int option = input.confirmMenuSelection("O que deseja: ", 0, 11);
 	        switch (option) {
 
-				
+				//======================================//
+				//			  Book Services				//
+				//======================================//
 	            case 1:
 	            	bookService.create();
 	                break;
@@ -68,6 +69,12 @@ public class InputOutputInterface {
 				case 5:
 					bookService.delete();
 					break;
+
+
+
+				//======================================//
+				//			  Book Services				//
+				//======================================//
 	            case 6:
 	                clientService.create();
 	                break;
@@ -77,23 +84,27 @@ public class InputOutputInterface {
 				case 8:
 					clientService.update();
 					break;
-	            case 9:
-	            	clientService.delete();
-	            	break;
-	            case 10:
+
+
+
+
+				//======================================//
+				//				Sale Service			//
+				//======================================//
+				case 9:
 	                saleService.processSale();
 	                break;
 
 
 
 				// Consultas Personalizadas
-				case 11:
+				case 10:
 					clientService.getClientByMinimumSpent(500.0);
 					break;
-				case 12:
+				case 11:
 					saleService.findSaleByDate();
 					break;
-				case 13:
+				case 12:
 					bookService.mostSold();
 					break;
 

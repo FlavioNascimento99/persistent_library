@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 
 @Entity
-@Table(name = "sales")
+@Table(name = "sales20192370034")
 public class Sale {
 	
 	@Id
@@ -92,8 +92,9 @@ public class Sale {
 	@Override
 	public String toString() {
 		return String.format("ID: %s%n" +
+				"Nome do Cliente: %s%n" +
 				"Data da Venda: %s%n" +
-				"Valor total da Venda: %s%n ", id, dateSale, totalValue);
+				"Valor total da Venda: %s%n ", id, getClient().getName(), dateSale, totalValue);
 	}
 
 }
