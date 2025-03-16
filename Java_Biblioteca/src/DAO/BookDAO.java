@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+
 import Entities.Book;
 import org.apache.log4j.Logger;
 
