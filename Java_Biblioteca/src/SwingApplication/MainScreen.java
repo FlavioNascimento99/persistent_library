@@ -64,6 +64,8 @@ public class MainScreen {
          *     - private JMenu bookMenu;                            *
          *     - private JMenu saleMenu;                            *
          *     - private JMenu customMenu;                          *
+         *                                                          *
+         *     [!] Added one menu bar option for each entity manage *
          ************************************************************/
         clientMenu = new JMenu("Clients");
         clientMenu.addMouseListener(new MouseAdapter() {

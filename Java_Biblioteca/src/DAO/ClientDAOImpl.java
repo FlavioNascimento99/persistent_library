@@ -6,14 +6,17 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import Entities.Client;
-import org.apache.log4j.Logger;
-import org.hibernate.annotations.ParamDef;
+import Interfaces.ClientDAO;
 
-public class ClientDAO extends GenericDAO<Client, Integer> {
-    public ClientDAO(EntityManager manager) {
+public abstract class ClientDAOImpl extends GenericDAOImpl<Client, Integer> implements ClientDAO {
+
+    // Class-constructor
+    public ClientDAOImpl(EntityManager manager) {
+
+        // Super calls superclass constructor's (GenericDAOImpl in this case).
         super(manager, Client.class);
-    }
 
+    }
 
     public Client search(Integer clientId) {
     	TypedQuery<Client> clientQuery = manager.createQuery("SELECT c FROM Client c WHERE c.id = :id", Client.class);

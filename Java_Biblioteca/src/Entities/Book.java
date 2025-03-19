@@ -13,19 +13,23 @@ public class Book {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
-	
 	private String title;
 	private String author;
+    private String year;
+    private String genre;
     private String isbn;
     private Long quantitySold;
-    private double price;
+    private Double price;
+
 
 	public Book(){}
-	public Book(String title, String author, Double price, String isbn){
+	public Book(String isbn, String title, String author, String year, String genre, Double price){
 		this.title = title;
 		this.author = author;
 		this.price = price;
         this.isbn = isbn;
+        this.year = year;
+        this.genre = genre;
 	}
 	
 	
@@ -33,23 +37,34 @@ public class Book {
     public int getId() {
         return id;
     }
-    public String getAuthor() {
-        return author;
-    }
     public double getPrice() {
         return price;
+    }
+    public String getAuthor() {
+        return author;
     }
     public String getTitle() {
         return title;
     }
     public String getIsbn(){return isbn;}
+    public String getYear() {
+        return year;
+    }
+    public String getGenre() {
+        return genre;
+    }
     public Long getQuantitySold() {
         return quantitySold;
     }
 
-    
-    
-    
+
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
     public void setTitle(String title) {
         this.title = title;
     }

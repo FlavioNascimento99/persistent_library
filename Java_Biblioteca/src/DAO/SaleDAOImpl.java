@@ -7,11 +7,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import Entities.Sale;
-import org.apache.log4j.Logger;
 
-public class SaleDAO extends GenericDAO<Sale, Integer> {
+public abstract class SaleDAOImpl extends GenericDAOImpl<Sale, Integer> {
 
-	public SaleDAO(EntityManager manager) {
+	public SaleDAOImpl(EntityManager manager) {
 		super(manager, Sale.class);
 	}
 
@@ -20,10 +19,6 @@ public class SaleDAO extends GenericDAO<Sale, Integer> {
 		saleQuery.setParameter("dateStart", dateStart);
 		saleQuery.setParameter("dateEnd", dateEnd);
 		return saleQuery.getResultList();
-	}
-
-	public Sale search(int id) {
-		return findById(id);
 	}
 
 }

@@ -2,13 +2,12 @@ package Services;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import DAO.ClientDAO;
-import DAO.BookDAO;
-import DAO.SaleDAO;
+import DAO.ClientDAOImpl;
+import DAO.BookDAOImpl;
 
+import DAO.SaleDAOImpl;
 import Entities.Client;
 import Entities.ItemSale;
 import Entities.Book;
@@ -22,19 +21,20 @@ import javax.persistence.EntityManager;
 
 public class SaleService {
 	private static final Logger logger = Logger.getLogger(SaleService.class);
+
 	private final Input inputUtils;
-	private final BookDAO bookDAO;
-	private final ClientDAO clientDAO;
-	private final SaleDAO saleDAO;
+	private final BookDAOImpl bookDAO;
+	private final ClientDAOImpl clientDAO;
+	private final SaleDAOImpl saleDAO;
 	private EntityManager manager;
 
 
-	public SaleService(Input inputUtils, ClientDAO clientDAO, BookDAO bookDAO, EntityManager manager) {
+	public SaleService(Input inputUtils, ClientDAOImpl clientDAO, BookDAOImpl bookDAO, SaleDAOImpl saleDAO, EntityManager manager) {
 		this.manager = manager;
 		this.inputUtils = inputUtils;
 		this.clientDAO = clientDAO;
 		this.bookDAO = bookDAO;
-		this.saleDAO = new SaleDAO(manager);
+		this.saleDAO = saleDAO;
 	}
 
 	public void findSaleByDate() {

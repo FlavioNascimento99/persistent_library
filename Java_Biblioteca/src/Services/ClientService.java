@@ -2,9 +2,8 @@ package Services;
 
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.xml.crypto.Data;
 
-import DAO.ClientDAO;
+import DAO.ClientDAOImpl;
 import Entities.Client;
 import Entities.Sale;
 import Utils.Database;
@@ -14,12 +13,12 @@ import org.apache.log4j.Logger;
 public class ClientService {
 	private static final Logger logger = Logger.getLogger(ClientService.class);
 	private final Input input;
-	private final ClientDAO clientDAO;
+	private final ClientDAOImpl clientDAO;
 	private EntityManager manager;
 
-	public ClientService(EntityManager manager, Input input) {
+	public ClientService(EntityManager manager, Input input, ClientDAOImpl clientDAO) {
 		this.manager = manager;
-		this.clientDAO = new ClientDAO(manager);
+		this.clientDAO = clientDAO;
 		this.input = input;
 	}
 
