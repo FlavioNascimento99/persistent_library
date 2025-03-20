@@ -1,6 +1,9 @@
 package SwingApplication;
 
 import javax.swing.*;
+
+import Services.BookService;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -81,7 +84,7 @@ public class MainScreen {
         bookMenu.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // new bookScreen();
+                new BookScreen();
             }
         });
         menuBar.add(bookMenu);

@@ -3,8 +3,8 @@ package DAO;
 import Interfaces.GenericDAO;
 import org.apache.log4j.Logger;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import java.util.List;
 
 public abstract class GenericDAOImpl<T, Integer> implements GenericDAO<T> {

@@ -2,12 +2,12 @@
 import java.util.Scanner;
 
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import DAO.ClientDAOImpl;
 import DAO.BookDAOImpl;
 
-import Interfaces.InputOutputInterface;
+//import Interfaces.InputOutputInterface;
 
 import Services.ClientService;
 import Services.BookService;

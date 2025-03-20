@@ -3,7 +3,7 @@ package Entities;
 import java.time.LocalDate;
 import java.util.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 
 @Entity

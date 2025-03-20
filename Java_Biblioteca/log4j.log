@@ -1,0 +1,36 @@
+01:03:44,495 DEBUG logging:38 - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+01:03:44,662  INFO LogHelper:31 - HHH000204: Processing PersistenceUnitInfo [name: hibernate-mysql]
+01:03:44,730  INFO Version:44 - HHH000412: Hibernate ORM core version 6.6.5.Final
+01:03:44,737  WARN deprecation:741 - HHH90000021: Encountered deprecated setting [javax.persistence.jdbc.user], use [jakarta.persistence.jdbc.user] instead
+01:03:44,738  WARN deprecation:763 - HHH90000021: Encountered deprecated setting [javax.persistence.jdbc.password], use [jakarta.persistence.jdbc.password] instead
+01:03:44,738  WARN deprecation:1078 - HHH90000021: Encountered deprecated setting [javax.persistence.jdbc.url], use [jakarta.persistence.jdbc.url] instead
+01:03:44,740  WARN deprecation:1085 - HHH90000021: Encountered deprecated setting [javax.persistence.jdbc.driver], use [jakarta.persistence.jdbc.driver] instead
+01:03:44,787 DEBUG RegionFactoryInitiator:122 - Cannot default RegionFactory based on registered strategies as `[]` RegionFactory strategies were registered
+01:03:44,788  INFO RegionFactoryInitiator:50 - HHH000026: Second-level cache disabled
+01:03:45,281  WARN pooling:86 - HHH10001002: Using built-in connection pool (not intended for production use)
+01:03:45,783  WARN deprecation:153 - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+01:03:45,786  WARN deprecation:101 - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+01:03:45,821  INFO pooling:157 - HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3306/pob?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true]
+	Database driver: com.mysql.cj.jdbc.Driver
+	Database version: 8.0
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+01:03:47,522  INFO JtaPlatformInitiator:59 - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+01:03:47,553  INFO access:52 - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@6f5ccb0d] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+01:03:48,192 DEBUG SQL:135 - 
+    select
+        b1_0.id,
+        b1_0.author,
+        b1_0.genre,
+        b1_0.isbn,
+        b1_0.price,
+        b1_0.quantitySold,
+        b1_0.title,
+        b1_0.year 
+    from
+        books20192370034 b1_0
+01:04:02,908 ERROR pooling:483 - Connection leak detected: there are 1 unclosed connections upon shutting down pool jdbc:mysql://localhost:3306/pob?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+01:04:02,908 ERROR pooling:311 - Connection leak detected: there are 1 unclosed connections

@@ -1,6 +1,6 @@
 package Entities;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "items_sales20192370034")

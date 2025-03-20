@@ -4,14 +4,19 @@ import Entities.Book;
 import Services.BookService;
 import Utils.Database;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
+
+import DAO.BookDAOImpl;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 public class BookScreen {
     EntityManager manager;
@@ -37,7 +42,9 @@ public class BookScreen {
     private JLabel label_5;
     private JLabel label_6;
     private JLabel label_7;
-    
+    private JLabel label_8;
+    private JLabel label_9;
+
     private JTextField textField;
     private JTextField textField_2;
     private JTextField textField_3;
@@ -46,28 +53,31 @@ public class BookScreen {
     private JTextField textField_6;
 
     public BookService bookService;
+	private  BookDAOImpl bookDAO;
 
 
     public BookScreen() {
-        initialize();
+    	this.manager = Database.openConnection();
+    	this.bookService = new BookService(manager);
+        initialize(bookService);
     }
 
-    private void initialize() {
+    private void initialize(BookService bookService) {
         dialogFrame = new JDialog();
         dialogFrame.setModal(true);
         dialogFrame.setTitle("Tela de Gerenciamento de Livros");
-        dialogFrame.setBounds(100, 100, 450, 300);
+        dialogFrame.setBounds(100, 100, 800, 450);
         dialogFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         dialogFrame.getContentPane().setLayout(null);
         dialogFrame.addWindowListener(new java.awt.event.WindowAdapter() {
 
             public void windowOpened(java.awt.event.WindowEvent e) {
                 Database.openConnection();
-                listBooks();
+                fetchBooks();
             }
 
             public void windowClosing(java.awt.event.WindowEvent e) {
-                Database.closeConnection(manager);
+                Database.shutdown();
             }
 
         });
@@ -115,49 +125,11 @@ public class BookScreen {
         tablePane.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         scrollPane.setViewportView(tablePane);
 
-        button_3 = new JButton("Deletar");
-        button_3.setToolTipText("apagar pessoa e seus dados");
-        button_3.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    if(textField.getText().isEmpty()) {
-                        label_2.setText("nome vazio");
-                        return;
-                    }
-
-                    String bookName = textField.getText();
-                    Object[] options = { "Confirmar", "Cancelar" };
-                    int escolha = JOptionPane
-                            .showOptionDialog(null,
-                                    "Esta opcao ira apagar o Livro " +bookName,
-                                    "Alerta",
-                                    JOptionPane.DEFAULT_OPTION,
-                                    JOptionPane.WARNING_MESSAGE,
-                                    null,
-                                    options,
-                                    options[1]);
-
-                    if(escolha == 0) {
-                        bookService.delete(bookName);
-                        label.setText("Livro deletado com sucesso!");
-                        listBooks();
-                    } else
-                        label.setText("Operacao cancelada!");
-
-                } catch (Exception ignored) {
-                    label.setText(ignored.getMessage());
-                }
-            }
-        });
-
-        button_3.setFont(new Font("Tahoma", Font.PLAIN, 11));
-        button_3.setBounds(318, 325, 74, 23);
-        dialogFrame.getContentPane().add(button_3);
 
 
         label = new JLabel("");
         label.setForeground(Color.RED);
-        label.setBounds(21, 359, 735, 14);
+        label.setBounds(21, 11, 751, 17);
         dialogFrame.getContentPane().add(label);
 
         labelEdit = new JLabel("Selecione um livro para editar: ");
@@ -171,7 +143,7 @@ public class BookScreen {
         label_2 = new JLabel("Titulo:");
         label_2.setHorizontalAlignment(SwingConstants.LEFT);
         label_2.setFont(new Font("Tahoma", Font.PLAIN, 11));
-        label_2.setBounds(31, 239, 62, 14);
+        label_2.setBounds(31, 239, 74, 14);
         dialogFrame.getContentPane().add(label_2);
 
         textField = new JTextField();
@@ -189,14 +161,16 @@ public class BookScreen {
         label_3 = new JLabel("Autor:");
         label_3.setHorizontalAlignment(SwingConstants.LEFT);
         label_3.setFont(new Font("Tahoma", Font.PLAIN, 11));
-        label_3.setBounds(31, 268, 62, 14);
+        label_3.setBounds(31, 265, 74, 14);
+
+
         dialogFrame.getContentPane().add(label_3);
 
         textField_2 = new JTextField();
         textField_2.setFont(new Font("Dialog", Font.PLAIN, 12));
         textField_2.setColumns(10);
         textField_2.setBackground(Color.WHITE);
-        textField_2.setBounds(101, 235, 165, 20);
+        textField_2.setBounds(101, 261, 165, 20);
         dialogFrame.getContentPane().add(textField_2);
 
 
@@ -205,17 +179,17 @@ public class BookScreen {
         /**
          * Book Year
          */
-        label_4 = new JLabel("Ano Lancamento:");
+        label_4 = new JLabel("Ano:");
         label_4.setHorizontalAlignment(SwingConstants.LEFT);
         label_4.setFont(new Font("Tahoma", Font.PLAIN, 11));
-        label_4.setBounds(31, 268, 62, 14);
+        label_4.setBounds(31, 290, 74, 14);
         dialogFrame.getContentPane().add(label_4);
 
         textField_3 = new JTextField();
         textField_3.setFont(new Font("Dialog", Font.PLAIN, 12));
         textField_3.setColumns(10);
         textField_3.setBackground(Color.WHITE);
-        textField_3.setBounds(101, 235, 165, 20);
+        textField_3.setBounds(101, 286, 165, 20);
         dialogFrame.getContentPane().add(textField_3);
 
         /**
@@ -224,14 +198,14 @@ public class BookScreen {
         label_7 = new JLabel("Genero:");
         label_7.setHorizontalAlignment(SwingConstants.LEFT);
         label_7.setFont(new Font("Tahoma", Font.PLAIN, 11));
-        label_7.setBounds(31, 268, 62, 14);
+        label_7.setBounds(31, 315, 74, 14);
         dialogFrame.getContentPane().add(label_7);
 
         textField_6 = new JTextField();
         textField_6.setFont(new Font("Dialog", Font.PLAIN, 12));
         textField_6.setColumns(10);
         textField_6.setBackground(Color.WHITE);
-        textField_6.setBounds(101, 235, 165, 20);
+        textField_6.setBounds(101, 311, 165, 20);
         dialogFrame.getContentPane().add(textField_6);
 
 
@@ -241,14 +215,14 @@ public class BookScreen {
         label_5 = new JLabel("Preco unt.:");
         label_5.setHorizontalAlignment(SwingConstants.LEFT);
         label_5.setFont(new Font("Tahoma", Font.PLAIN, 11));
-        label_5.setBounds(31, 268, 62, 14);
+        label_5.setBounds(31, 340, 74, 14);
         dialogFrame.getContentPane().add(label_5);
 
         textField_4 = new JTextField();
         textField_4.setFont(new Font("Dialog", Font.PLAIN, 12));
         textField_4.setColumns(10);
         textField_4.setBackground(Color.WHITE);
-        textField_4.setBounds(101, 235, 165, 20);
+        textField_4.setBounds(101, 336, 165, 20);
         dialogFrame.getContentPane().add(textField_4);
 
 
@@ -259,14 +233,14 @@ public class BookScreen {
         label_6 = new JLabel("ISBN:");
         label_6.setHorizontalAlignment(SwingConstants.LEFT);
         label_6.setFont(new Font("Tahoma", Font.PLAIN, 11));
-        label_6.setBounds(31, 268, 62, 14);
+        label_6.setBounds(31, 365, 74, 14);
         dialogFrame.getContentPane().add(label_6);
 
         textField_5 = new JTextField();
         textField_5.setFont(new Font("Dialog", Font.PLAIN, 12));
         textField_5.setColumns(10);
         textField_5.setBackground(Color.WHITE);
-        textField_5.setBounds(101, 235, 165, 20);
+        textField_5.setBounds(101, 361, 165, 20);
         dialogFrame.getContentPane().add(textField_5);
 
 
@@ -299,7 +273,7 @@ public class BookScreen {
                     bookService.create(isbn, title, author, year, genre, priceText);
 
                     label.setText("Livro cadastrado com sucesso!");
-                    listBooks();
+                    fetchBooks();
                 }
                 catch(Exception ex) {
                     label.setText(ex.getMessage());
@@ -307,7 +281,7 @@ public class BookScreen {
             }
         });
         button_1.setFont(new Font("Tahoma", Font.PLAIN, 11));
-        button_1.setBounds(144, 325, 62, 23);
+        button_1.setBounds(400, 352, 74, 48);
         dialogFrame.getContentPane().add(button_1);
 
 
@@ -323,36 +297,161 @@ public class BookScreen {
                     String author = textField_2.getText().trim();
                     String year = textField_3.getText().trim();
                     String genre = textField_6.getText().trim();
-                    String price = textField_4.getText().trim();
+                    Double price = Double.valueOf(textField_4.getText().trim());
                     String isbn = textField_5.getText().trim();
 
+                    String newTitle = textField.getText().trim();
+                    String newAuthor = textField.getText().trim();
+                    Double newPrice = Double.valueOf(textField.getText().trim());
+                    String newIsbn = textField.getText().trim();
+                    String newGenre = textField.getText().trim();
+                    String newYear = textField.getText().trim();
+
+
                     // Validação básica para não permitir campos vazios
-                    if (title.isEmpty() || author.isEmpty() || price.isEmpty() || isbn.isEmpty() || genre.isEmpty() || year.isEmpty()) {
+                    if (title.isEmpty() || author.isEmpty() || isbn.isEmpty() || genre.isEmpty() || year.isEmpty()) {
                         JOptionPane.showMessageDialog(null, "Todos os campos devem ser preenchidos!", "Erro", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
 
-                    Double newPrice = price.isEmpty() ? null : Double.parseDouble(price);
 
-                    bookService.update(oldTitle, newTitle, newAuthor, newPrice, newIsbn);
+                    bookService.update(title, newTitle, newAuthor, newPrice, newIsbn, newGenre, newYear);
 
-
-                    String numero = textField_4.getText();
-                    if(!numero.isEmpty())
-                        Fachada.criarTelefone(nome, numero);
-                    label.setText("pessoa atualizada");
-                    listagem();
+                    JOptionPane.showMessageDialog(null, "Livro atualizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                    fetchBooks();
                 }
-                catch(Exception ex2) {
-                    label.setText(ex2.getMessage());
+
+                catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "Preço inválido. Insira um número válido.", "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+
+                catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Erro ao atualizar livro: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
-        button_7.setFont(new Font("Tahoma", Font.PLAIN, 11));
-        button_7.setBounds(221, 325, 87, 23);
-        frame.getContentPane().add(button_7);
+        button_2.setFont(new Font("Tahoma", Font.PLAIN, 11));
+        button_2.setBounds(565, 358, 89, 28);
+        dialogFrame.getContentPane().add(button_2);
 
 
+
+        button_3 = new JButton("Deletar");
+        button_3.setToolTipText("apagar pessoa e seus dados");
+        button_3.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    if(textField.getText().isEmpty()) {
+                        label_2.setText("nome vazio");
+                        return;
+                    }
+
+                    String bookName = textField.getText();
+                    Object[] options = { "Confirmar", "Cancelar" };
+                    int escolha = JOptionPane
+                            .showOptionDialog(null,
+                                    "Esta opcao ira apagar o Livro " +bookName,
+                                    "Alerta",
+                                    JOptionPane.DEFAULT_OPTION,
+                                    JOptionPane.WARNING_MESSAGE,
+                                    null,
+                                    options,
+                                    options[1]);
+
+                    if(escolha == 0) {
+                        bookService.delete(bookName);
+                        label.setText("Livro deletado com sucesso!");
+                        fetchBooks();
+                    } else
+                        label.setText("Operacao cancelada!");
+
+                } catch (Exception ignored) {
+                    label.setText(ignored.getMessage());
+                }
+            }
+        });
+        button_3.setFont(new Font("Tahoma", Font.PLAIN, 11));
+        button_3.setBounds(480, 359, 80, 28);
+        dialogFrame.getContentPane().add(button_3);
+
+
+        /**
+         *
+         *  Refresh List?
+         *
+         */
+        button_4 = new JButton("Limpar");
+        button_4.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                textField.setText("");
+                textField_2.setText("");
+                textField_3.setText("");
+                textField_4.setText("");
+                textField_5.setText("");
+                textField_6.setText("");
+            }
+        });
+        button_4.setBounds(664, 358, 89, 28);
+        dialogFrame.getContentPane().add(button_4);
+
+
+
+        label_8 = new JLabel("Novo Livro");
+        label_8.setHorizontalAlignment(SwingConstants.LEFT);
+        label_8.setFont(new Font("Tahoma", Font.PLAIN, 11));
+        label_8.setBounds(400, 236, 74, 20);
+
+        // TITULO
+
+        dialogFrame.getContentPane().add(label_8);
+
+        textField_4 = new JTextField();
+        textField_4.setFont(new Font("Dialog", Font.PLAIN, 12));
+        textField_4.setColumns(10);
+        textField_4.setBounds(470, 235, 165, 20);
+        dialogFrame.getContentPane().add(textField_4);
+
+        dialogFrame.setVisible(true);
+    }
+
+    public void fetchBooks() {
+        try {
+            // Criar um novo modelo de tabela
+            DefaultTableModel tableModel = new DefaultTableModel();
+
+            // Adicionar colunas à tabela
+            tableModel.addColumn("Title");
+            tableModel.addColumn("Author");
+            tableModel.addColumn("Genre");
+            tableModel.addColumn("Year");
+            tableModel.addColumn("ISBN");
+            tableModel.addColumn("Price");
+
+            // Buscar lista de livros do banco
+            List<Book> bookList = bookService.list();
+
+            // Adicionar os livros ao modelo da tabela
+            for (Book book : bookList) {
+                tableModel.addRow(new Object[]{
+                        book.getTitle(),
+                        book.getAuthor(),
+                        book.getGenre(),
+                        book.getYear(),
+                        book.getIsbn(),
+                        book.getPrice()
+                });
+            }
+
+            // Atualizar a JTable com os novos dados
+            tablePane.setModel(tableModel);
+            label_9.setText("Resultados: " + bookList.size() + " livros encontrados.");
+
+            // Ajustar a largura das colunas automaticamente
+            tablePane.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
+        } catch (Exception erro) {
+            label.setText(erro.getMessage());
+        }
 
     }
 }

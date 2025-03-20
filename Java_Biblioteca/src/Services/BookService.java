@@ -1,47 +1,41 @@
 package Services;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import DAO.BookDAOImpl;
 import Entities.Book;
+import Interfaces.BookDAO;
 import Utils.Database;
-import Utils.Input;
 import org.apache.log4j.Logger;
 
 public class BookService {
 
 	// Attributes
 	private static final Logger logger = Logger.getLogger(BookService.class);
-	private final Input input;
-	private final BookDAOImpl bookDAO;
+	private final BookDAO bookDAO;
 	private EntityManager manager;
 
 
 	// Class-constructor
-	public BookService(EntityManager manager, Input input, BookDAOImpl bookDAO) {
-		this.input = input;
+	public BookService(EntityManager manager) {
 		this.manager = manager;
-		this.bookDAO = bookDAO;
+		this.bookDAO = new BookDAOImpl(manager);
 	}
 
 
 	//
-	public void list() {
-        try {
-			logger.info("Inicializando busca de livros no Banco de Dados...");
-			Database.beginTransaction(manager);
-            System.out.println("\n--- Lista de Livros ---");
+	public List<Book> list() {
+		Database.beginTransaction(manager);
+		List<Book> books = new ArrayList<>();
 
-			for (Book book : bookDAO.list()) {
-                System.out.println(book);
-            }
-
-        } catch(Exception e) {
-			System.out.println(e.getMessage());
-			Database.rollbackTransaction(manager);
+		for (Book book : bookDAO.list()) {
+			books.add(book);
 		}
+		Database.closeConnection(manager);
+		return books;
     }
 
 
@@ -103,69 +97,28 @@ public class BookService {
 	
 	
 	// Método de edição de livros 
-	public void update(String oldTitle, String newTitle, String newAuthor, Double newPrice, Double newIsbn) {
-		Database.beginTransaction(manager);
-
-		System.out.println("\n--- Editar Livro ---");
-		List<Book> bookList = bookDAO.list();
-
+	public void update(String oldTitle, String newTitle, String newAuthor, Double newPrice, String newIsbn, String newGenre, String newYear) {
 		try {
-			if (bookList.isEmpty()) {
-				System.out.println("Não existem livros cadastrados.");
-			} else {
-				for (int u = 0; u < bookList.size(); u++) {
-					System.out.println((u + 1) + ". " + bookList.get(u).getTitle());
-				}
+			Database.beginTransaction(manager);
+			Book book = bookDAO.searchByTitle(oldTitle);
 
-				int option;
-				option = input.integerInput("Selecione um livro: ");
-
-				if (option < 1 || option > bookList.size()) {
-					System.out.println("Opcao fora de intervalo, tente novamente.");
-					return;
-				}
-
-
-				Book selectedBook = bookList.get(option - 1);
-				String setNewName = input.stringInput("[ALTERAR - pressione N e valor será mantido] Titulo(Atual): " + selectedBook.getTitle());
-
-				if (setNewName.equals("n")  ||  setNewName.equals("N")) {
-					System.out.println("Sem alteração");
-				} else {
-					selectedBook.setTitle(setNewName);
-					System.out.println("Titulo atual: " + selectedBook.getTitle());
-					bookDAO.update(selectedBook);
-				}
-
-				String setNewAuthor = input.stringInput("[ALTERAR - Pressione N e o valor será mantido] Autor(Atual): " + selectedBook.getAuthor());
-				if (setNewAuthor.equals("n")  ||  setNewAuthor.equals("N")) {
-					System.out.println("Sem alteração.");
-				} else {
-					selectedBook.setAuthor(setNewAuthor);
-					bookDAO.update(selectedBook);
-				}
-
-				String setNewISBN = input.stringInput("[ALTERAR - Pressione N e o valor será mantido] ISBN(Atual): " + selectedBook.getIsbn());
-				if (setNewISBN.equals("n")  ||  setNewISBN.equals("N")) {
-					System.out.println("Sem alteração.");
-				} else {
-					selectedBook.setIsbn(setNewISBN);
-					bookDAO.update(selectedBook);
-				}
-
-				double setNewPrice = input.doubleInput("[ALTERAR - pressione 0 e o valor será mantido] Valor(Atual): " + selectedBook.getPrice());
-				if (setNewPrice == 0.0) {
-					System.out.println("Sem alteração.");
-				} else {
-					selectedBook.setPrice(setNewPrice);
-					bookDAO.update(selectedBook);
-				}
-
-				Database.commitTransaction(manager);
+			if (book == null) {
+				throw new Exception("Não existem livros cadastrados.");
 			}
-		} catch(Exception e) {
-			System.out.println(e.getMessage());
+
+			// Atualiza apenas os valores fornecidos
+			if (newTitle != null && !newTitle.isEmpty()) book.setTitle(newTitle);
+			if (newAuthor != null && !newAuthor.isEmpty()) book.setAuthor(newAuthor);
+			if (newPrice != null && newPrice > 0) book.setPrice(newPrice);
+			if (newIsbn != null && !newIsbn.isEmpty()) book.setIsbn(newIsbn);
+			if (newGenre != null && !newGenre.isEmpty()) book.setGenre(newGenre);
+			if (newYear != null && !newYear.isEmpty()) book.setYear(newYear);
+
+			bookDAO.update(book);
+			Database.commitTransaction(manager);
+		} catch (Exception e) {
 			Database.rollbackTransaction(manager);
+			throw new RuntimeException("Erro ao atualizar o livro: " + e.getMessage());
 		}
 	}
 
@@ -181,8 +134,11 @@ public class BookService {
     }
 
 
-
-	// Listagem de livros mais vendidos.
+	/**
+	 *
+	 * * CONSULTA * Livros mais vendidos.
+	 *
+	 */
 	public void mostSold() {
 		System.out.println("\n--- Livros mais vendidos ---");
 		if(bookDAO.listTopSellingBooks().isEmpty()){

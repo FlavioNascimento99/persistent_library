@@ -3,15 +3,18 @@ package DAO;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 
 
 import Entities.Book;
 import Interfaces.BookDAO;
+import Utils.Database;
 
-public abstract class BookDAOImpl extends GenericDAOImpl<Book, Integer> implements BookDAO {
+public class BookDAOImpl extends GenericDAOImpl<Book, Integer> implements BookDAO {
+	
     public BookDAOImpl(EntityManager manager) {
+  
         super(manager, Book.class);
     }
 

@@ -17,7 +17,7 @@ import Utils.Database;
 import Utils.Input;
 import org.apache.log4j.Logger;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 public class SaleService {
 	private static final Logger logger = Logger.getLogger(SaleService.class);
